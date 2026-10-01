@@ -127,48 +127,33 @@
     ====================================== -->
 
     <a-scene
-
         mindar-image="
             imageTargetSrc: ./assets/targets/FuradeiraTargets.mind;
             uiLoading: yes;
             uiScanning: yes;
             uiError: yes;
         "
-
         vr-mode-ui="enabled: false"
-
-        device-orientation-permission-ui="enabled: false">
-
-
-        <!-- Câmera -->
+        device-orientation-permission-ui="enabled: false"
+        renderer="colorManagement: true">
 
         <a-camera
             position="0 0 0"
             look-controls="enabled: false">
         </a-camera>
 
-
-        <!-- Imagem reconhecida -->
-
         <a-entity
             id="furadeiraTarget"
             mindar-image-target="targetIndex: 0">
 
-
-            <!-- Imagem que aparece sobre a foto -->
-
-            <a-image
-                src="./img/imagem.png"
-                position="0 0 0.25"
-                width="2"
-                height="1">
-            </a-image>
-
+            <a-box
+                position="0 0 0"
+                material="color: red;">
+            </a-box>
 
         </a-entity>
 
     </a-scene>
-
 
     <!-- =====================================
          INTERFACE HTML
@@ -224,67 +209,30 @@
 
     <script>
 
-        const target =
-            document.querySelector("#furadeiraTarget");
+        const scene = document.querySelector("a-scene");
 
-        const painel =
-            document.querySelector("#painelFuradeira");
+        scene.addEventListener("loaded", () => {
+            console.log("A-Frame carregado");
+        });
 
+        scene.addEventListener("renderstart", () => {
+            console.log("Renderização iniciada");
+        });
 
-        /*
-        Quando o MindAR encontra a imagem
-        */
+        const target = document.querySelector("#furadeiraTarget");
 
         target.addEventListener("targetFound", () => {
-
-            console.log("Furadeira reconhecida!");
-
-            painel.style.display = "block";
-
+            console.log("================================");
+            console.log("FURADEIRA ENCONTRADA!");
+            console.log("================================");
         });
-
-
-        /*
-        Quando a imagem sai da câmera
-        */
 
         target.addEventListener("targetLost", () => {
-
             console.log("Furadeira perdida");
-
-            painel.style.display = "none";
-
         });
 
-
-        /*
-        Botão de manutenção
-        */
-
-        function mostrarManutencao() {
-
-            alert(
-                "Procedimento:\n\n" +
-                "1. Desligar equipamento\n" +
-                "2. Desconectar energia\n" +
-                "3. Verificar broca\n" +
-                "4. Verificar lubrificação"
-            );
-
-        }
-
-
-        /*
-        Fechar painel
-        */
-
-        function fecharPainel() {
-
-            painel.style.display = "none";
-
-        }
-
     </script>
+
 
 </body>
 
