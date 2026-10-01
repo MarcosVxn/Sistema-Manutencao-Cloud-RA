@@ -3,47 +3,289 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Furadeira</title>
+    <title>Furadeira - Realidade Aumentada</title>
 
-    <!-- Biblioteca A-Frame: criação da cena 3D -->
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-    <!-- Biblioteca MindAR: reconhecimento e rastreamento da imagem -->
+    <!-- MindAR -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+
+            font-family: Arial, sans-serif;
+        }
+
+        /*
+        Painel HTML que aparece quando
+        a imagem é reconhecida
+        */
+
+        #painelFuradeira {
+
+            position: fixed;
+
+            left: 50%;
+            bottom: 20px;
+
+            transform: translateX(-50%);
+
+            width: min(90%, 400px);
+
+            padding: 20px;
+
+            background: rgba(15, 25, 35, 0.95);
+
+            color: white;
+
+            border: 2px solid #f5b400;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.5);
+
+            z-index: 100;
+
+            display: none;
+        }
+
+        #painelFuradeira h2 {
+
+            margin-top: 0;
+
+            color: #f5b400;
+        }
+
+        #painelFuradeira p {
+
+            line-height: 1.5;
+        }
+
+        .status {
+
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            background: #16803c;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            margin-bottom: 10px;
+        }
+
+        .botao {
+
+            width: 100%;
+
+            padding: 12px;
+
+            margin-top: 10px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #f5b400;
+
+            color: #111;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .botao:hover {
+
+            background: #ffc72c;
+        }
+
+    </style>
+
 </head>
 
 <body>
 
+
+    <!-- =====================================
+         CENA DE REALIDADE AUMENTADA
+    ====================================== -->
+
     <a-scene
-    mindar-image="
-        imageTargetSrc: ./assets/targets/FuradeiraTargets.mind;
-        uiLoading: yes;
-        uiScanning: yes;
-        uiError: yes;
-    "
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false">
 
-    <a-camera
-        position="0 0 0"
-        look-controls="enabled: false">
-    </a-camera>
+        mindar-image="
+            imageTargetSrc: ./assets/targets/FuradeiraTargets.mind;
+            uiLoading: yes;
+            uiScanning: yes;
+            uiError: yes;
+        "
 
-    <a-entity mindar-image-target="targetIndex: 0">
-        <a-image
-            src="./img/imagem.png"
-            position="0 0 0.25"
-            width="2"
-            height="1">
-        </a-image>
-    </a-entity>
+        vr-mode-ui="enabled: false"
 
-</a-scene>
+        device-orientation-permission-ui="enabled: false">
+
+
+        <!-- Câmera -->
+
+        <a-camera
+            position="0 0 0"
+            look-controls="enabled: false">
+        </a-camera>
+
+
+        <!-- Imagem reconhecida -->
+
+        <a-entity
+            id="furadeiraTarget"
+            mindar-image-target="targetIndex: 0">
+
+
+            <!-- Imagem que aparece sobre a foto -->
+
+            <a-image
+                src="./img/imagem.png"
+                position="0 0 0.25"
+                width="2"
+                height="1">
+            </a-image>
+
+
+        </a-entity>
 
     </a-scene>
 
+
+    <!-- =====================================
+         INTERFACE HTML
+    ====================================== -->
+
+    <div id="painelFuradeira">
+
+        <span class="status">
+            ● EQUIPAMENTO RECONHECIDO
+        </span>
+
+        <h2>Furadeira Industrial</h2>
+
+        <p>
+            <strong>Modelo:</strong>
+            FUR-2026
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            Operacional
+        </p>
+
+        <p>
+            <strong>Última manutenção:</strong>
+            15/09/2026
+        </p>
+
+
+        <button
+            class="botao"
+            onclick="mostrarManutencao()">
+
+            Procedimentos de manutenção
+
+        </button>
+
+
+        <button
+            class="botao"
+            onclick="fecharPainel()">
+
+            Fechar
+
+        </button>
+
+    </div>
+
+
+    <!-- =====================================
+         JAVASCRIPT
+    ====================================== -->
+
+    <script>
+
+        const target =
+            document.querySelector("#furadeiraTarget");
+
+        const painel =
+            document.querySelector("#painelFuradeira");
+
+
+        /*
+        Quando o MindAR encontra a imagem
+        */
+
+        target.addEventListener("targetFound", () => {
+
+            console.log("Furadeira reconhecida!");
+
+            painel.style.display = "block";
+
+        });
+
+
+        /*
+        Quando a imagem sai da câmera
+        */
+
+        target.addEventListener("targetLost", () => {
+
+            console.log("Furadeira perdida");
+
+            painel.style.display = "none";
+
+        });
+
+
+        /*
+        Botão de manutenção
+        */
+
+        function mostrarManutencao() {
+
+            alert(
+                "Procedimento:\n\n" +
+                "1. Desligar equipamento\n" +
+                "2. Desconectar energia\n" +
+                "3. Verificar broca\n" +
+                "4. Verificar lubrificação"
+            );
+
+        }
+
+
+        /*
+        Fechar painel
+        */
+
+        function fecharPainel() {
+
+            painel.style.display = "none";
+
+        }
+
+    </script>
+
 </body>
+
 </html>
