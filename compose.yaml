@@ -1,0 +1,58 @@
+services:
+  # Broker MQTT
+  broker:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto_broker
+    restart: always
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      
+  # --- SUA PARTE (TORNO CNC) ---
+  backend-cnc:
+    build: ./backendCNC
+    container_name: api_cnc
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - MQTT_BROKER=broker
+      - MQTT_PORT=1883
+    depends_on:
+      - broker
+
+  simulador-cnc:
+    build: ./simuladorCNC
+    container_name: simulator_cnc
+    restart: always
+    environment:
+      - MQTT_BROKER=broker
+      - MQTT_PORT=1883
+    depends_on:
+      - broker
+
+  # --- PARTE DA SUA DUPLA (FURADEIRA) ---
+
+
+# backend-frd:
+#   build: ./backendFrd
+#   container_name: api_furadeira
+#   restart: always
+#   ports:
+#     - "5001:5000"  # Porta 5001 no PC para não dar conflito com a 5000 do CNC
+#   environment:
+#     - MQTT_BROKER=broker
+#     - MQTT_PORT=1883
+#   depends_on:
+#     - broker
+
+# simulador-frd:
+#   build: ./SimuladorFrd
+#   container_name: simulator_furadeira
+#   restart: always
+#   environment:
+#     - MQTT_BROKER=broker
+#     - MQTT_PORT=1883
+#   depends_on:
+#     - broker
