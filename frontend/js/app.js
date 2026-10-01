@@ -12,9 +12,9 @@ fetch("./js/dados.json")
 */
 
 document.getElementById("btnFuradeira").onclick = (e)=> {
-    window.location.href = "./telas/furadeira.html"
+    window.location.href = "./frontend/telas/furadeira.html"
 };
 
 document.getElementById("btnTorno").onclick = ()=> {
-    window.location.href = "./telas/tornoCNC.html"
+    window.location.href = "./frontend/telas/tornoCNC.html"
 };
