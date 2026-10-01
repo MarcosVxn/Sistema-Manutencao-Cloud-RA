@@ -1,0 +1,281 @@
+/* ================================
+   CONFIGURAÇÕES GERAIS
+================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    font-family: "Segoe UI", Arial, sans-serif;
+
+    background:
+        linear-gradient(rgba(10, 18, 28, 0.95), rgba(10, 18, 28, 0.98)),
+        repeating-linear-gradient(
+            45deg,
+            #17212b 0px,
+            #17212b 2px,
+            #141d26 2px,
+            #141d26 8px
+        );
+
+    color: #e8edf2;
+}
+
+
+/* ================================
+   CABEÇALHO
+================================ */
+
+#boxCabecalho {
+    width: 100%;
+    min-height: 130px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px 40px;
+
+    background: #111b25;
+
+    border-bottom: 4px solid #f5b400;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Pequeno detalhe industrial */
+
+#boxCabecalho::before {
+    content: "⚙";
+
+    margin-right: 20px;
+
+    font-size: 42px;
+    color: #f5b400;
+}
+
+
+#titulo {
+    max-width: 1000px;
+
+    font-size: clamp(20px, 3vw, 34px);
+    font-weight: 600;
+
+    line-height: 1.25;
+    text-align: center;
+
+    color: #f1f4f7;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* ================================
+   CONTEÚDO PRINCIPAL
+================================ */
+
+#boxConteudo {
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 35px;
+
+    padding: 60px 30px;
+
+    position: relative;
+}
+
+
+/* Texto acima dos equipamentos */
+
+#boxConteudo::before {
+    content: "SELECIONE O EQUIPAMENTO";
+
+    position: absolute;
+    top: 35px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    letter-spacing: 3px;
+
+    color: #8997a5;
+}
+
+
+/* ================================
+   BOTÕES
+================================ */
+
+#boxConteudo button {
+    width: 280px;
+    height: 170px;
+
+    border: 1px solid #3c4c5a;
+    border-bottom: 5px solid #687887;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #263542,
+            #18242e
+        );
+
+    color: #f0f3f5;
+
+    font-size: 21px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.35);
+
+    position: relative;
+}
+
+
+/* Ícone */
+
+#boxConteudo button::before {
+    display: block;
+
+    margin-bottom: 15px;
+
+    font-size: 42px;
+
+    color: #f5b400;
+}
+
+
+/* Ícones individuais */
+
+#btnFuradeira::before {
+    content: "⚒";
+}
+
+#btnTorno::before {
+    content: "⚙";
+}
+
+
+/* Efeito ao passar o mouse */
+
+#boxConteudo button:hover {
+    transform: translateY(-5px);
+
+    border-color: #f5b400;
+
+    border-bottom-color: #f5b400;
+
+    background:
+        linear-gradient(
+            145deg,
+            #304353,
+            #1c2b36
+        );
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        0 0 15px rgba(245, 180, 0, 0.15);
+}
+
+
+/* Efeito ao clicar */
+
+#boxConteudo button:active {
+    transform: translateY(1px);
+
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ================================
+   RODAPÉ
+================================ */
+
+#boxRodape {
+    width: 100%;
+
+    padding: 18px 30px;
+
+    background: #0c141c;
+
+    border-top: 1px solid #293844;
+
+    text-align: center;
+}
+
+
+#txtCreditos {
+    color: #73818d;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* ================================
+   RESPONSIVIDADE
+================================ */
+
+@media (max-width: 700px) {
+
+    #boxCabecalho {
+        padding: 25px 20px;
+    }
+
+    #boxCabecalho::before {
+        display: none;
+    }
+
+    #titulo {
+        font-size: 22px;
+    }
+
+    #boxConteudo {
+        flex-direction: column;
+
+        gap: 20px;
+
+        padding-top: 80px;
+    }
+
+    #boxConteudo button {
+        width: min(90vw, 350px);
+
+        height: 140px;
+    }
+}
+
+
+/* ================================
+   ACESSIBILIDADE
+================================ */
+
+#boxConteudo button:focus-visible {
+    outline: 3px solid #f5b400;
+    outline-offset: 4px;
+}
