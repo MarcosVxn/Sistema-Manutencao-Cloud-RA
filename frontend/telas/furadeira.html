@@ -5,29 +5,17 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Furadeira - Realidade Aumentada</title>
 
-
-    <!-- =========================================
-         A-FRAME
-    ========================================== -->
-
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-
-    <!-- =========================================
-         MINDAR
-    ========================================== -->
-
+    <!-- MindAR -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-
-
-    <!-- =========================================
-         CSS
-    ========================================== -->
 
     <style>
 
@@ -35,25 +23,18 @@
             box-sizing: border-box;
         }
 
-
-        html,
         body {
 
             margin: 0;
 
-            width: 100%;
-            height: 100%;
-
             overflow: hidden;
 
             font-family: Arial, sans-serif;
-
-            background: #000;
         }
 
 
         /* =====================================
-           PAINEL DE INFORMAÇÕES
+           PAINEL
         ====================================== */
 
         #painelFuradeira {
@@ -66,22 +47,18 @@
 
             transform: translateX(-50%);
 
-            width: min(90%, 420px);
-
-            max-height: 75vh;
-
-            overflow-y: auto;
+            width: min(90%, 400px);
 
             padding: 20px;
 
             background:
-                rgba(15, 25, 35, 0.96);
+                rgba(15, 25, 35, 0.95);
 
             color: white;
 
             border: 2px solid #f5b400;
 
-            border-radius: 14px;
+            border-radius: 12px;
 
             box-shadow:
                 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -94,27 +71,17 @@
 
         #painelFuradeira h2 {
 
-            margin-top: 8px;
-
-            margin-bottom: 15px;
+            margin-top: 0;
 
             color: #f5b400;
-
-            font-size: 22px;
         }
 
 
         #painelFuradeira p {
 
             line-height: 1.5;
-
-            margin: 9px 0;
         }
 
-
-        /* =====================================
-           STATUS
-        ====================================== */
 
         .status {
 
@@ -128,19 +95,13 @@
 
             font-size: 13px;
 
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
-
-        /* =====================================
-           BOTÕES
-        ====================================== */
 
         .botao {
 
             width: 100%;
-
-            min-height: 44px;
 
             padding: 12px;
 
@@ -157,98 +118,12 @@
             font-weight: bold;
 
             cursor: pointer;
-
-            font-size: 15px;
         }
 
 
         .botao:hover {
 
             background: #ffc72c;
-        }
-
-
-        .botao.fechar {
-
-            background: #444;
-
-            color: white;
-        }
-
-
-        .botao.fechar:hover {
-
-            background: #555;
-        }
-
-
-        /* =====================================
-           INSTRUÇÃO
-        ====================================== */
-
-        #instrucao {
-
-            position: fixed;
-
-            top: 20px;
-
-            left: 50%;
-
-            transform: translateX(-50%);
-
-            z-index: 90;
-
-            width: max-content;
-
-            max-width: 90%;
-
-            padding: 10px 18px;
-
-            background:
-                rgba(0, 0, 0, 0.75);
-
-            color: white;
-
-            border-radius: 25px;
-
-            font-size: 14px;
-
-            text-align: center;
-
-            pointer-events: none;
-        }
-
-
-        /* =====================================
-           TOAST
-        ====================================== */
-
-        #toast {
-
-            position: fixed;
-
-            left: 50%;
-
-            top: 75px;
-
-            transform: translateX(-50%);
-
-            z-index: 200;
-
-            padding: 10px 18px;
-
-            border-radius: 20px;
-
-            background:
-                rgba(0, 0, 0, 0.85);
-
-            color: white;
-
-            display: none;
-
-            font-size: 13px;
-
-            text-align: center;
         }
 
     </style>
@@ -260,25 +135,7 @@
 
 
     <!-- =====================================
-         INSTRUÇÃO
-    ====================================== -->
-
-    <div id="instrucao">
-
-        Aponte para a furadeira
-
-    </div>
-
-
-    <!-- =====================================
-         MENSAGEM
-    ====================================== -->
-
-    <div id="toast"></div>
-
-
-    <!-- =====================================
-         CENA DE REALIDADE AUMENTADA
+         CENA AR
     ====================================== -->
 
     <a-scene
@@ -305,22 +162,13 @@
 
             position="0 0 0"
 
-            look-controls="enabled: false"
-
-            cursor="
-                rayOrigin: mouse;
-                fuse: false;
-            "
-
-            raycaster="
-                objects: .hotspot;
-            ">
+            look-controls="enabled: false">
 
         </a-camera>
 
 
         <!-- =================================
-             TARGET DA FURADEIRA
+             TARGET
         ================================== -->
 
         <a-entity
@@ -331,7 +179,7 @@
 
 
             <!-- =================================
-                 HOTSPOT - CABEÇOTE
+                 PONTO 1 - CABEÇOTE
             ================================== -->
 
             <a-sphere
@@ -344,16 +192,13 @@
 
                 radius="0.05"
 
-                material="
-                    color: #f5b400;
-                    opacity: 1;
-                ">
+                material="color: #f5b400;">
 
             </a-sphere>
 
 
             <!-- =================================
-                 HOTSPOT - INTERRUPTOR
+                 PONTO 2 - INTERRUPTOR
             ================================== -->
 
             <a-sphere
@@ -366,16 +211,13 @@
 
                 radius="0.05"
 
-                material="
-                    color: #ff4444;
-                    opacity: 1;
-                ">
+                material="color: #ff4444;">
 
             </a-sphere>
 
 
             <!-- =================================
-                 HOTSPOT - MOTOR
+                 PONTO 3 - MOTOR
             ================================== -->
 
             <a-sphere
@@ -388,16 +230,13 @@
 
                 radius="0.05"
 
-                material="
-                    color: #2196f3;
-                    opacity: 1;
-                ">
+                material="color: #2196f3;">
 
             </a-sphere>
 
 
             <!-- =================================
-                 HOTSPOT - MANDRIL
+                 PONTO 4 - MANDRIL
             ================================== -->
 
             <a-sphere
@@ -410,16 +249,13 @@
 
                 radius="0.05"
 
-                material="
-                    color: #4caf50;
-                    opacity: 1;
-                ">
+                material="color: #4caf50;">
 
             </a-sphere>
 
 
             <!-- =================================
-                 HOTSPOT - ALAVANCA
+                 PONTO 5 - ALAVANCA
             ================================== -->
 
             <a-sphere
@@ -432,16 +268,13 @@
 
                 radius="0.05"
 
-                material="
-                    color: #9c27b0;
-                    opacity: 1;
-                ">
+                material="color: #9c27b0;">
 
             </a-sphere>
 
 
             <!-- =================================
-                 HOTSPOT - MESA
+                 PONTO 6 - MESA
             ================================== -->
 
             <a-sphere
@@ -454,16 +287,13 @@
 
                 radius="0.05"
 
-                material="
-                    color: #ff9800;
-                    opacity: 1;
-                ">
+                material="color: #ff9800;">
 
             </a-sphere>
 
 
             <!-- =================================
-                 HOTSPOT - COLUNA
+                 PONTO 7 - COLUNA
             ================================== -->
 
             <a-sphere
@@ -476,16 +306,13 @@
 
                 radius="0.05"
 
-                material="
-                    color: #00bcd4;
-                    opacity: 1;
-                ">
+                material="color: #00bcd4;">
 
             </a-sphere>
 
 
             <!-- =================================
-                 HOTSPOT - BASE
+                 PONTO 8 - BASE
             ================================== -->
 
             <a-sphere
@@ -498,10 +325,7 @@
 
                 radius="0.05"
 
-                material="
-                    color: #795548;
-                    opacity: 1;
-                ">
+                material="color: #795548;">
 
             </a-sphere>
 
@@ -512,7 +336,7 @@
 
 
     <!-- =====================================
-         PAINEL DE INFORMAÇÕES
+         PAINEL HTML
     ====================================== -->
 
     <div id="painelFuradeira">
@@ -526,9 +350,7 @@
 
 
         <h2 id="tituloPeca">
-
             Furadeira Industrial
-
         </h2>
 
 
@@ -559,18 +381,9 @@
             <strong>Informações:</strong>
 
             <span id="descricaoPeca">
+
                 Selecione um ponto da furadeira.
-            </span>
 
-        </p>
-
-
-        <p>
-
-            <strong>Função:</strong>
-
-            <span id="funcaoPeca">
-                -
             </span>
 
         </p>
@@ -589,7 +402,7 @@
 
         <button
 
-            class="botao fechar"
+            class="botao"
 
             id="botaoFechar">
 
@@ -609,224 +422,123 @@
 
 
         /* =====================================
-           DADOS DOS COMPONENTES
+           DADOS
         ====================================== */
 
         const informacoes = {
 
-
             cabecote: {
 
-                titulo:
-                    "Cabeçote",
+                titulo: "Cabeçote",
 
-                modelo:
-                    "CAB-2026",
+                modelo: "CAB-2026",
 
-                status:
-                    "Operacional",
+                status: "Operacional",
 
                 descricao:
-                    "Conjunto superior da furadeira responsável por abrigar parte do sistema de acionamento e transmissão.",
-
-                funcao:
-                    "Abrigar os mecanismos de acionamento da máquina."
+                    "Conjunto superior da furadeira."
 
             },
 
 
             interruptor: {
 
-                titulo:
-                    "Interruptor",
+                titulo: "Interruptor",
 
-                modelo:
-                    "INT-220",
+                modelo: "INT-220",
 
-                status:
-                    "Operacional",
+                status: "Operacional",
 
                 descricao:
-                    "Interruptor utilizado para ligar e desligar o equipamento.",
-
-                funcao:
-                    "Controlar a alimentação elétrica da máquina."
+                    "Controla o acionamento da máquina."
 
             },
 
 
             motor: {
 
-                titulo:
-                    "Motor",
+                titulo: "Motor",
 
-                modelo:
-                    "MTR-500",
+                modelo: "MTR-500",
 
-                status:
-                    "Operacional",
+                status: "Operacional",
 
                 descricao:
-                    "Motor elétrico responsável por fornecer a potência necessária para o sistema de perfuração.",
-
-                funcao:
-                    "Converter energia elétrica em movimento rotacional."
+                    "Responsável pelo movimento rotacional."
 
             },
 
 
             mandril: {
 
-                titulo:
-                    "Mandril",
+                titulo: "Mandril",
 
-                modelo:
-                    "MDR-16",
+                modelo: "MDR-16",
 
-                status:
-                    "Operacional",
+                status: "Operacional",
 
                 descricao:
-                    "Componente responsável por prender e centralizar a broca.",
-
-                funcao:
-                    "Fixar a ferramenta de corte."
+                    "Responsável pela fixação da broca."
 
             },
 
 
             alavanca: {
 
-                titulo:
-                    "Alavanca de avanço",
+                titulo: "Alavanca",
 
-                modelo:
-                    "ALV-300",
+                modelo: "ALV-300",
 
-                status:
-                    "Operacional",
+                status: "Operacional",
 
                 descricao:
-                    "Mecanismo utilizado para movimentar verticalmente o conjunto de perfuração.",
-
-                funcao:
-                    "Controlar o avanço da broca."
+                    "Controla o avanço da broca."
 
             },
 
 
             mesa: {
 
-                titulo:
-                    "Mesa de trabalho",
+                titulo: "Mesa",
 
-                modelo:
-                    "MESA-400",
+                modelo: "MESA-400",
 
-                status:
-                    "Operacional",
+                status: "Operacional",
 
                 descricao:
-                    "Superfície onde a peça de trabalho é apoiada durante a operação.",
-
-                funcao:
-                    "Sustentar e posicionar a peça."
+                    "Área de apoio da peça de trabalho."
 
             },
 
 
             coluna: {
 
-                titulo:
-                    "Coluna",
+                titulo: "Coluna",
 
-                modelo:
-                    "COL-500",
+                modelo: "COL-500",
 
-                status:
-                    "Operacional",
+                status: "Operacional",
 
                 descricao:
-                    "Estrutura vertical que sustenta o conjunto superior da máquina.",
-
-                funcao:
-                    "Garantir sustentação e alinhamento."
+                    "Estrutura vertical da máquina."
 
             },
 
 
             base: {
 
-                titulo:
-                    "Base",
+                titulo: "Base",
 
-                modelo:
-                    "BAS-600",
+                modelo: "BAS-600",
 
-                status:
-                    "Operacional",
+                status: "Operacional",
 
                 descricao:
-                    "Estrutura inferior responsável pelo apoio e estabilidade da furadeira.",
-
-                funcao:
-                    "Garantir estabilidade durante a operação."
+                    "Responsável pela estabilidade."
 
             }
 
         };
-
-
-        /* =====================================
-           ELEMENTOS DO PAINEL
-        ====================================== */
-
-        const painel =
-            document.querySelector(
-                "#painelFuradeira"
-            );
-
-
-        const titulo =
-            document.querySelector(
-                "#tituloPeca"
-            );
-
-
-        const modelo =
-            document.querySelector(
-                "#modeloPeca"
-            );
-
-
-        const status =
-            document.querySelector(
-                "#statusPeca"
-            );
-
-
-        const descricao =
-            document.querySelector(
-                "#descricaoPeca"
-            );
-
-
-        const funcao =
-            document.querySelector(
-                "#funcaoPeca"
-            );
-
-
-        const instrucao =
-            document.querySelector(
-                "#instrucao"
-            );
-
-
-        const toast =
-            document.querySelector(
-                "#toast"
-            );
 
 
         /* =====================================
@@ -835,55 +547,45 @@
 
         function abrirInformacao(tipo) {
 
-
             const info =
                 informacoes[tipo];
 
 
             if (!info) {
 
-                console.warn(
-                    "Informação não encontrada:",
-                    tipo
-                );
-
                 return;
 
             }
 
 
-            titulo.textContent =
+            document
+                .querySelector("#tituloPeca")
+                .textContent =
                 info.titulo;
 
 
-            modelo.textContent =
+            document
+                .querySelector("#modeloPeca")
+                .textContent =
                 info.modelo;
 
 
-            status.textContent =
+            document
+                .querySelector("#statusPeca")
+                .textContent =
                 info.status;
 
 
-            descricao.textContent =
+            document
+                .querySelector("#descricaoPeca")
+                .textContent =
                 info.descricao;
 
 
-            funcao.textContent =
-                info.funcao;
-
-
-            painel.style.display =
+            document
+                .querySelector("#painelFuradeira")
+                .style.display =
                 "block";
-
-
-            instrucao.style.display =
-                "none";
-
-
-            console.log(
-                "Hotspot selecionado:",
-                tipo
-            );
 
         }
 
@@ -894,49 +596,10 @@
 
         function fecharPainel() {
 
-            painel.style.display =
+            document
+                .querySelector("#painelFuradeira")
+                .style.display =
                 "none";
-
-
-            instrucao.style.display =
-                "block";
-
-        }
-
-
-        /* =====================================
-           PROCEDIMENTOS DE MANUTENÇÃO
-        ====================================== */
-
-        function mostrarManutencao() {
-
-            mostrarToast(
-                "Procedimentos de manutenção selecionados."
-            );
-
-        }
-
-
-        /* =====================================
-           TOAST
-        ====================================== */
-
-        function mostrarToast(mensagem) {
-
-            toast.textContent =
-                mensagem;
-
-
-            toast.style.display =
-                "block";
-
-
-            setTimeout(() => {
-
-                toast.style.display =
-                    "none";
-
-            }, 2500);
 
         }
 
@@ -1077,12 +740,18 @@
             .querySelector("#botaoManutencao")
             .addEventListener(
                 "click",
-                mostrarManutencao
+                () => {
+
+                    alert(
+                        "Procedimentos de manutenção"
+                    );
+
+                }
             );
 
 
         /* =====================================
-           TARGET MINDAR
+           TARGET
         ====================================== */
 
         const target =
@@ -1107,14 +776,6 @@
                     "================================"
                 );
 
-
-                instrucao.textContent =
-                    "Toque nos pontos para obter informações";
-
-
-                instrucao.style.display =
-                    "block";
-
             }
         );
 
@@ -1126,14 +787,6 @@
                 console.log(
                     "Furadeira perdida"
                 );
-
-
-                painel.style.display =
-                    "none";
-
-
-                instrucao.textContent =
-                    "Aponte para a furadeira";
 
             }
         );
@@ -1174,7 +827,6 @@
 
 
     </script>
-
 
 </body>
 
