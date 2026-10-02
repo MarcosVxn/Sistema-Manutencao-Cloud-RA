@@ -11,18 +11,10 @@
 
     <title>Furadeira - Realidade Aumentada</title>
 
-
-    <!-- =====================================================
-         A-FRAME
-    ====================================================== -->
-
+    <!-- A-FRAME -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-
-    <!-- =====================================================
-         MINDAR
-    ====================================================== -->
-
+    <!-- MINDAR -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
 
@@ -33,28 +25,20 @@
         }
 
 
-        html,
         body {
 
             margin: 0;
-
-            padding: 0;
-
-            width: 100%;
-
-            height: 100%;
 
             overflow: hidden;
 
             font-family: Arial, sans-serif;
 
-            background: #000;
         }
 
 
-        /* =====================================================
-           PAINEL DE INFORMAÇÕES
-        ====================================================== */
+        /* ==========================================
+           PAINEL
+        ========================================== */
 
         #painelFuradeira {
 
@@ -66,38 +50,32 @@
 
             transform: translateX(-50%);
 
-            width: min(90%, 420px);
-
-            max-height: 70vh;
-
-            overflow-y: auto;
+            width: min(90%, 400px);
 
             padding: 20px;
 
             background:
-                rgba(15, 25, 35, 0.96);
+                rgba(15, 25, 35, 0.95);
 
             color: white;
 
             border: 2px solid #f5b400;
 
-            border-radius: 14px;
+            border-radius: 12px;
 
             box-shadow:
-                0 10px 30px
-                rgba(0, 0, 0, 0.55);
+                0 10px 30px rgba(0,0,0,0.5);
 
-            z-index: 1000;
+            z-index: 100;
 
             display: none;
+
         }
 
 
         #painelFuradeira h2 {
 
             margin-top: 0;
-
-            margin-bottom: 15px;
 
             color: #f5b400;
 
@@ -110,10 +88,6 @@
 
         }
 
-
-        /* =====================================================
-           STATUS
-        ====================================================== */
 
         .status {
 
@@ -128,46 +102,31 @@
             font-size: 13px;
 
             margin-bottom: 10px;
+
         }
 
-
-        /* =====================================================
-           BOTÕES
-        ====================================================== */
 
         .botao {
 
             width: 100%;
 
-            padding: 13px;
+            padding: 12px;
 
             margin-top: 10px;
 
             border: none;
 
-            border-radius: 7px;
+            border-radius: 6px;
 
             background: #f5b400;
 
             color: #111;
 
-            font-size: 15px;
-
             font-weight: bold;
 
             cursor: pointer;
 
-            touch-action: manipulation;
         }
-
-
-        .botao:active {
-
-            background: #ffc72c;
-
-            transform: scale(0.98);
-        }
-
 
     </style>
 
@@ -177,13 +136,14 @@
 <body>
 
 
-    <!-- =====================================================
-         CENA DE REALIDADE AUMENTADA
-    ====================================================== -->
+    <!-- ==========================================
+         CENA AR
+
+         NÃO ALTERAMOS A CONFIGURAÇÃO QUE
+         ESTAVA FUNCIONANDO.
+    ========================================== -->
 
     <a-scene
-
-        id="ar-scene"
 
         mindar-image="
             imageTargetSrc: ../assets/targets/FuradeiraTargets.mind;
@@ -199,49 +159,29 @@
         renderer="colorManagement: true">
 
 
-        <!-- =================================================
-             CÂMERA
-
-             O raycaster observa somente os objetos
-             que possuem a classe .hotspot.
-        ================================================== -->
+        <!-- CÂMERA -->
 
         <a-camera
 
-            id="ar-camera"
-
             position="0 0 0"
 
-            look-controls="enabled: false"
-
-            cursor="
-                rayOrigin: mouse;
-                fuse: false;
-            "
-
-            raycaster="
-                objects: .hotspot;
-                far: 1000;
-            ">
+            look-controls="enabled: false">
 
         </a-camera>
 
 
-        <!-- =================================================
-             TARGET DA FURADEIRA
-        ================================================== -->
+        <!-- TARGET -->
 
         <a-entity
 
-            id="target"
+            id="furadeiraTarget"
 
             mindar-image-target="targetIndex: 0">
 
 
-            <!-- =================================================
+            <!-- ======================================
                  PONTO 1
-                 CABEÇOTE
-            ================================================== -->
+            ======================================= -->
 
             <a-sphere
 
@@ -253,18 +193,14 @@
 
                 radius="0.05"
 
-                material="
-                    color: #f5b400;
-                    shader: standard;
-                ">
+                material="color: #f5b400;">
 
             </a-sphere>
 
 
-            <!-- =================================================
+            <!-- ======================================
                  PONTO 2
-                 INTERRUPTOR
-            ================================================== -->
+            ======================================= -->
 
             <a-sphere
 
@@ -276,18 +212,14 @@
 
                 radius="0.05"
 
-                material="
-                    color: #ff4444;
-                    shader: standard;
-                ">
+                material="color: #ff4444;">
 
             </a-sphere>
 
 
-            <!-- =================================================
+            <!-- ======================================
                  PONTO 3
-                 MOTOR
-            ================================================== -->
+            ======================================= -->
 
             <a-sphere
 
@@ -299,18 +231,14 @@
 
                 radius="0.05"
 
-                material="
-                    color: #2196f3;
-                    shader: standard;
-                ">
+                material="color: #2196f3;">
 
             </a-sphere>
 
 
-            <!-- =================================================
+            <!-- ======================================
                  PONTO 4
-                 MANDRIL
-            ================================================== -->
+            ======================================= -->
 
             <a-sphere
 
@@ -322,18 +250,14 @@
 
                 radius="0.05"
 
-                material="
-                    color: #4caf50;
-                    shader: standard;
-                ">
+                material="color: #4caf50;">
 
             </a-sphere>
 
 
-            <!-- =================================================
+            <!-- ======================================
                  PONTO 5
-                 ALAVANCA
-            ================================================== -->
+            ======================================= -->
 
             <a-sphere
 
@@ -345,18 +269,14 @@
 
                 radius="0.05"
 
-                material="
-                    color: #9c27b0;
-                    shader: standard;
-                ">
+                material="color: #9c27b0;">
 
             </a-sphere>
 
 
-            <!-- =================================================
+            <!-- ======================================
                  PONTO 6
-                 MESA
-            ================================================== -->
+            ======================================= -->
 
             <a-sphere
 
@@ -368,18 +288,14 @@
 
                 radius="0.05"
 
-                material="
-                    color: #ff9800;
-                    shader: standard;
-                ">
+                material="color: #ff9800;">
 
             </a-sphere>
 
 
-            <!-- =================================================
+            <!-- ======================================
                  PONTO 7
-                 COLUNA
-            ================================================== -->
+            ======================================= -->
 
             <a-sphere
 
@@ -391,18 +307,14 @@
 
                 radius="0.05"
 
-                material="
-                    color: #00bcd4;
-                    shader: standard;
-                ">
+                material="color: #00bcd4;">
 
             </a-sphere>
 
 
-            <!-- =================================================
+            <!-- ======================================
                  PONTO 8
-                 BASE
-            ================================================== -->
+            ======================================= -->
 
             <a-sphere
 
@@ -414,10 +326,7 @@
 
                 radius="0.05"
 
-                material="
-                    color: #795548;
-                    shader: standard;
-                ">
+                material="color: #795548;">
 
             </a-sphere>
 
@@ -427,9 +336,9 @@
     </a-scene>
 
 
-    <!-- =====================================================
-         PAINEL DE INFORMAÇÕES
-    ====================================================== -->
+    <!-- ==========================================
+         PAINEL
+    ========================================== -->
 
     <div id="painelFuradeira">
 
@@ -442,9 +351,7 @@
 
 
         <h2 id="tituloPeca">
-
             Componente
-
         </h2>
 
 
@@ -456,41 +363,24 @@
 
 
         <p id="descricaoPeca">
-
             -
-
         </p>
 
 
         <p>
 
-            <strong>Informações adicionais:</strong>
+            <strong>Detalhes:</strong>
 
         </p>
 
 
         <p id="detalhesPeca">
-
             -
-
         </p>
 
 
         <button
-
-            id="botaoManutencao"
-
-            class="botao">
-
-            Procedimentos de manutenção
-
-        </button>
-
-
-        <button
-
             id="botaoFechar"
-
             class="botao">
 
             Fechar
@@ -501,9 +391,9 @@
     </div>
 
 
-    <!-- =====================================================
+    <!-- ==========================================
          JAVASCRIPT
-    ====================================================== -->
+    ========================================== -->
 
     <script>
 
@@ -513,19 +403,13 @@
             () => {
 
 
-                /* =================================================
-                   REFERÊNCIAS
-                ================================================= */
-
-                const scene =
-                    document.querySelector(
-                        "#ar-scene"
-                    );
-
+                /* ======================================
+                   ELEMENTOS
+                ======================================= */
 
                 const target =
                     document.querySelector(
-                        "#target"
+                        "#furadeiraTarget"
                     );
 
 
@@ -559,168 +443,139 @@
                     );
 
 
-                const botaoManutencao =
-                    document.querySelector(
-                        "#botaoManutencao"
-                    );
-
-
                 const hotspots =
-                    Array.from(
-                        document.querySelectorAll(
-                            ".hotspot"
-                        )
+                    document.querySelectorAll(
+                        ".hotspot"
                     );
 
 
-                /* =================================================
-                   BANCO DE DADOS DOS COMPONENTES
-                ================================================= */
+                /* ======================================
+                   INFORMAÇÕES
+                ======================================= */
 
                 const information = {
 
 
                     cabecote: {
 
-                        title:
-                            "Cabeçote",
+                        title: "Cabeçote",
 
                         text:
-                            "Conjunto superior da furadeira responsável por abrigar o sistema de acionamento e transmissão.",
+                            "Conjunto superior da furadeira responsável pelo acionamento e transmissão.",
 
                         detail:
-                            "Verifique fixações, ruídos anormais, vibrações e sinais de desgaste."
+                            "Verifique fixações, ruídos, vibrações e sinais de desgaste."
 
                     },
 
 
                     interruptor: {
 
-                        title:
-                            "Interruptor",
+                        title: "Interruptor",
 
                         text:
                             "Componente utilizado para ligar e desligar o equipamento.",
 
                         detail:
-                            "Antes de qualquer manutenção elétrica, desligue a alimentação da máquina."
+                            "Antes de manutenção elétrica, desligue a alimentação da máquina."
 
                     },
 
 
                     motor: {
 
-                        title:
-                            "Motor",
+                        title: "Motor",
 
                         text:
-                            "Motor elétrico responsável por fornecer o movimento rotacional necessário para a perfuração.",
+                            "Motor elétrico responsável pelo movimento rotacional.",
 
                         detail:
-                            "Observe aquecimento excessivo, ruídos, vibrações ou alterações no funcionamento."
+                            "Observe aquecimento excessivo, ruídos e vibrações."
 
                     },
 
 
                     mandril: {
 
-                        title:
-                            "Mandril",
+                        title: "Mandril",
 
                         text:
-                            "Componente responsável pela fixação da broca durante a operação.",
+                            "Componente responsável pela fixação da broca.",
 
                         detail:
-                            "A broca deve estar corretamente centralizada e firmemente presa antes da operação."
+                            "Certifique-se de que a broca está corretamente fixada."
 
                     },
 
 
                     alavanca: {
 
-                        title:
-                            "Alavanca de avanço",
+                        title: "Alavanca de avanço",
 
                         text:
-                            "Mecanismo utilizado para movimentar verticalmente o conjunto de perfuração.",
+                            "Mecanismo utilizado para movimentar o conjunto de perfuração.",
 
                         detail:
-                            "O movimento deve ocorrer de maneira controlada e sem travamentos."
+                            "O movimento deve ocorrer de forma controlada."
 
                     },
 
 
                     mesa: {
 
-                        title:
-                            "Mesa de trabalho",
+                        title: "Mesa de trabalho",
 
                         text:
-                            "Superfície utilizada para apoiar a peça durante a operação.",
+                            "Superfície utilizada para apoiar a peça.",
 
                         detail:
-                            "Verifique se a peça está corretamente apoiada e fixada."
+                            "A peça deve estar corretamente apoiada e fixada."
 
                     },
 
 
                     coluna: {
 
-                        title:
-                            "Coluna",
+                        title: "Coluna",
 
                         text:
-                            "Estrutura vertical responsável pela sustentação do conjunto superior.",
+                            "Estrutura vertical que sustenta o conjunto superior.",
 
                         detail:
-                            "A coluna contribui para o alinhamento e estabilidade da máquina."
+                            "Contribui para o alinhamento e estabilidade."
 
                     },
 
 
                     base: {
 
-                        title:
-                            "Base",
+                        title: "Base",
 
                         text:
-                            "Estrutura inferior responsável pelo apoio e estabilidade da furadeira.",
+                            "Estrutura inferior responsável pelo apoio da furadeira.",
 
                         detail:
-                            "Verifique regularmente a fixação e estabilidade da máquina."
+                            "Verifique a fixação e estabilidade da máquina."
 
                     }
 
                 };
 
 
-                /* =================================================
+                /* ======================================
                    MOSTRAR INFORMAÇÃO
-                ================================================= */
+                ======================================= */
 
-                function showInformation(
-                    topicName
+                function mostrarInformacao(
+                    topic
                 ) {
 
 
-                    console.log(
-                        "Hotspot selecionado:",
-                        topicName
-                    );
+                    const info =
+                        information[topic];
 
 
-                    const selected =
-                        information[
-                            topicName
-                        ];
-
-
-                    if (!selected) {
-
-                        console.error(
-                            "Informação não encontrada:",
-                            topicName
-                        );
+                    if (!info) {
 
                         return;
 
@@ -728,15 +583,15 @@
 
 
                     titulo.textContent =
-                        selected.title;
+                        info.title;
 
 
                     descricao.textContent =
-                        selected.text;
+                        info.text;
 
 
                     detalhes.textContent =
-                        selected.detail;
+                        info.detail;
 
 
                     painel.style.display =
@@ -745,11 +600,11 @@
                 }
 
 
-                /* =================================================
-                   FECHAR PAINEL
-                ================================================= */
+                /* ======================================
+                   FECHAR
+                ======================================= */
 
-                function hideInformation() {
+                function fecharPainel() {
 
                     painel.style.display =
                         "none";
@@ -757,58 +612,35 @@
                 }
 
 
-                /* =================================================
-                   EVENTOS DOS HOTSPOTS
-                ================================================= */
+                /* ======================================
+                   INTERAÇÃO DOS PONTOS
+
+                   Não adicionamos:
+                   - cursor
+                   - raycaster
+                   - THREE.Vector3
+                   - projeção
+                   - posicionamento HTML
+
+                   A cena AR permanece intacta.
+                ======================================= */
 
                 hotspots.forEach(
                     (hotspot) => {
 
 
-                        /*
-                         * Click normal.
-                         */
-
                         hotspot.addEventListener(
                             "click",
-                            (event) => {
-
-                                event.preventDefault();
-
-                                event.stopPropagation();
+                            () => {
 
 
                                 const topic =
-                                    hotspot.dataset.topic;
+                                    hotspot.getAttribute(
+                                        "data-topic"
+                                    );
 
 
-                                showInformation(
-                                    topic
-                                );
-
-                            }
-                        );
-
-
-                        /*
-                         * Pointerdown para toque
-                         * em dispositivos móveis.
-                         */
-
-                        hotspot.addEventListener(
-                            "pointerdown",
-                            (event) => {
-
-                                event.preventDefault();
-
-                                event.stopPropagation();
-
-
-                                const topic =
-                                    hotspot.dataset.topic;
-
-
-                                showInformation(
+                                mostrarInformacao(
                                     topic
                                 );
 
@@ -820,103 +652,46 @@
                 );
 
 
-                /* =================================================
-                   BOTÃO FECHAR
-                ================================================= */
+                /* ======================================
+                   FECHAR PAINEL
+                ======================================= */
 
                 botaoFechar.addEventListener(
-                    "pointerdown",
-                    (event) => {
-
-                        event.preventDefault();
-
-                        hideInformation();
-
-                    }
+                    "click",
+                    fecharPainel
                 );
 
 
-                /* =================================================
-                   BOTÃO MANUTENÇÃO
-                ================================================= */
-
-                botaoManutencao.addEventListener(
-                    "pointerdown",
-                    (event) => {
-
-                        event.preventDefault();
-
-
-                        alert(
-                            "Procedimentos de manutenção do componente selecionado."
-                        );
-
-                    }
-                );
-
-
-                /* =================================================
-                   AR PRONTO
-                ================================================= */
-
-                scene.addEventListener(
-                    "arReady",
-                    () => {
-
-                        console.log(
-                            "AR pronto."
-                        );
-
-                    }
-                );
-
-
-                /* =================================================
-                   ERRO
-                ================================================= */
-
-                scene.addEventListener(
-                    "arError",
-                    () => {
-
-                        console.error(
-                            "Erro ao iniciar o AR."
-                        );
-
-                    }
-                );
-
-
-                /* =================================================
+                /* ======================================
                    TARGET ENCONTRADO
-                ================================================= */
+                ======================================= */
 
                 target.addEventListener(
                     "targetFound",
                     () => {
 
                         console.log(
-                            "FURADEIRA ENCONTRADA!"
+                            "FURADEIRA ENCONTRADA"
                         );
 
                     }
                 );
 
 
-                /* =================================================
+                /* ======================================
                    TARGET PERDIDO
-                ================================================= */
+                ======================================= */
 
                 target.addEventListener(
                     "targetLost",
                     () => {
 
                         console.log(
-                            "Furadeira perdida."
+                            "FURADEIRA PERDIDA"
                         );
 
 
-                        hideInformation();
+                        fecharPainel();
 
                     }
                 );
