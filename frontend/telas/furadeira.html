@@ -11,10 +11,18 @@
 
     <title>Furadeira - Realidade Aumentada</title>
 
-    <!-- A-Frame -->
+
+    <!-- =====================================================
+         A-FRAME
+    ====================================================== -->
+
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-    <!-- MindAR -->
+
+    <!-- =====================================================
+         MINDAR
+    ====================================================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
 
@@ -25,9 +33,16 @@
         }
 
 
+        html,
         body {
 
             margin: 0;
+
+            padding: 0;
+
+            width: 100%;
+
+            height: 100%;
 
             overflow: hidden;
 
@@ -38,7 +53,7 @@
 
 
         /* =====================================================
-           PAINEL
+           PAINEL DE INFORMAÇÕES
         ====================================================== */
 
         #painelFuradeira {
@@ -70,9 +85,9 @@
 
             box-shadow:
                 0 10px 30px
-                rgba(0, 0, 0, 0.5);
+                rgba(0, 0, 0, 0.55);
 
-            z-index: 100;
+            z-index: 1000;
 
             display: none;
         }
@@ -81,6 +96,8 @@
         #painelFuradeira h2 {
 
             margin-top: 0;
+
+            margin-bottom: 15px;
 
             color: #f5b400;
 
@@ -115,30 +132,30 @@
 
 
         /* =====================================================
-           BOTÃO
+           BOTÕES
         ====================================================== */
 
         .botao {
 
             width: 100%;
 
-            padding: 12px;
+            padding: 13px;
 
             margin-top: 10px;
 
             border: none;
 
-            border-radius: 6px;
+            border-radius: 7px;
 
             background: #f5b400;
 
             color: #111;
 
+            font-size: 15px;
+
             font-weight: bold;
 
             cursor: pointer;
-
-            font-size: 15px;
 
             touch-action: manipulation;
         }
@@ -148,6 +165,7 @@
 
             background: #ffc72c;
 
+            transform: scale(0.98);
         }
 
 
@@ -160,11 +178,7 @@
 
 
     <!-- =====================================================
-         CENA AR
-
-         IMPORTANTE:
-         Esta configuração é a mesma estrutura que já
-         estava funcionando.
+         CENA DE REALIDADE AUMENTADA
     ====================================================== -->
 
     <a-scene
@@ -187,6 +201,9 @@
 
         <!-- =================================================
              CÂMERA
+
+             O raycaster observa somente os objetos
+             que possuem a classe .hotspot.
         ================================================== -->
 
         <a-camera
@@ -195,13 +212,23 @@
 
             position="0 0 0"
 
-            look-controls="enabled: false">
+            look-controls="enabled: false"
+
+            cursor="
+                rayOrigin: mouse;
+                fuse: false;
+            "
+
+            raycaster="
+                objects: .hotspot;
+                far: 1000;
+            ">
 
         </a-camera>
 
 
         <!-- =================================================
-             TARGET
+             TARGET DA FURADEIRA
         ================================================== -->
 
         <a-entity
@@ -212,7 +239,8 @@
 
 
             <!-- =================================================
-                 PONTO 1 - CABEÇOTE
+                 PONTO 1
+                 CABEÇOTE
             ================================================== -->
 
             <a-sphere
@@ -234,7 +262,8 @@
 
 
             <!-- =================================================
-                 PONTO 2 - INTERRUPTOR
+                 PONTO 2
+                 INTERRUPTOR
             ================================================== -->
 
             <a-sphere
@@ -256,7 +285,8 @@
 
 
             <!-- =================================================
-                 PONTO 3 - MOTOR
+                 PONTO 3
+                 MOTOR
             ================================================== -->
 
             <a-sphere
@@ -278,7 +308,8 @@
 
 
             <!-- =================================================
-                 PONTO 4 - MANDRIL
+                 PONTO 4
+                 MANDRIL
             ================================================== -->
 
             <a-sphere
@@ -300,7 +331,8 @@
 
 
             <!-- =================================================
-                 PONTO 5 - ALAVANCA
+                 PONTO 5
+                 ALAVANCA
             ================================================== -->
 
             <a-sphere
@@ -322,7 +354,8 @@
 
 
             <!-- =================================================
-                 PONTO 6 - MESA
+                 PONTO 6
+                 MESA
             ================================================== -->
 
             <a-sphere
@@ -344,7 +377,8 @@
 
 
             <!-- =================================================
-                 PONTO 7 - COLUNA
+                 PONTO 7
+                 COLUNA
             ================================================== -->
 
             <a-sphere
@@ -366,7 +400,8 @@
 
 
             <!-- =================================================
-                 PONTO 8 - BASE
+                 PONTO 8
+                 BASE
             ================================================== -->
 
             <a-sphere
@@ -393,7 +428,7 @@
 
 
     <!-- =====================================================
-         PAINEL HTML
+         PAINEL DE INFORMAÇÕES
     ====================================================== -->
 
     <div id="painelFuradeira">
@@ -401,7 +436,7 @@
 
         <span class="status">
 
-            ● EQUIPAMENTO RECONHECIDO
+            ● COMPONENTE SELECIONADO
 
         </span>
 
@@ -419,6 +454,7 @@
 
         </p>
 
+
         <p id="descricaoPeca">
 
             -
@@ -428,9 +464,10 @@
 
         <p>
 
-            <strong>Detalhes:</strong>
+            <strong>Informações adicionais:</strong>
 
         </p>
+
 
         <p id="detalhesPeca">
 
@@ -469,6 +506,7 @@
     ====================================================== -->
 
     <script>
+
 
         document.addEventListener(
             "DOMContentLoaded",
@@ -536,7 +574,7 @@
 
 
                 /* =================================================
-                   BANCO DE INFORMAÇÕES
+                   BANCO DE DADOS DOS COMPONENTES
                 ================================================= */
 
                 const information = {
@@ -590,7 +628,7 @@
                             "Mandril",
 
                         text:
-                            "Componente responsável pela fixação da broca.",
+                            "Componente responsável pela fixação da broca durante a operação.",
 
                         detail:
                             "A broca deve estar corretamente centralizada e firmemente presa antes da operação."
@@ -657,12 +695,18 @@
 
 
                 /* =================================================
-                   ABRIR INFORMAÇÃO
+                   MOSTRAR INFORMAÇÃO
                 ================================================= */
 
                 function showInformation(
                     topicName
                 ) {
+
+
+                    console.log(
+                        "Hotspot selecionado:",
+                        topicName
+                    );
 
 
                     const selected =
@@ -673,7 +717,7 @@
 
                     if (!selected) {
 
-                        console.warn(
+                        console.error(
                             "Informação não encontrada:",
                             topicName
                         );
@@ -715,20 +759,49 @@
 
                 /* =================================================
                    EVENTOS DOS HOTSPOTS
-                   
-                   IMPORTANTE:
-                   Não usamos raycaster.
-                   Não usamos THREE.Vector3.
-                   Não usamos posicionamento HTML.
                 ================================================= */
 
                 hotspots.forEach(
                     (hotspot) => {
 
 
+                        /*
+                         * Click normal.
+                         */
+
                         hotspot.addEventListener(
                             "click",
-                            () => {
+                            (event) => {
+
+                                event.preventDefault();
+
+                                event.stopPropagation();
+
+
+                                const topic =
+                                    hotspot.dataset.topic;
+
+
+                                showInformation(
+                                    topic
+                                );
+
+                            }
+                        );
+
+
+                        /*
+                         * Pointerdown para toque
+                         * em dispositivos móveis.
+                         */
+
+                        hotspot.addEventListener(
+                            "pointerdown",
+                            (event) => {
+
+                                event.preventDefault();
+
+                                event.stopPropagation();
 
 
                                 const topic =
@@ -748,12 +821,14 @@
 
 
                 /* =================================================
-                   FECHAR PAINEL
+                   BOTÃO FECHAR
                 ================================================= */
 
                 botaoFechar.addEventListener(
-                    "click",
-                    () => {
+                    "pointerdown",
+                    (event) => {
+
+                        event.preventDefault();
 
                         hideInformation();
 
@@ -762,15 +837,50 @@
 
 
                 /* =================================================
-                   MANUTENÇÃO
+                   BOTÃO MANUTENÇÃO
                 ================================================= */
 
                 botaoManutencao.addEventListener(
-                    "click",
-                    () => {
+                    "pointerdown",
+                    (event) => {
+
+                        event.preventDefault();
+
 
                         alert(
-                            "Procedimentos de manutenção serão disponibilizados aqui."
+                            "Procedimentos de manutenção do componente selecionado."
+                        );
+
+                    }
+                );
+
+
+                /* =================================================
+                   AR PRONTO
+                ================================================= */
+
+                scene.addEventListener(
+                    "arReady",
+                    () => {
+
+                        console.log(
+                            "AR pronto."
+                        );
+
+                    }
+                );
+
+
+                /* =================================================
+                   ERRO
+                ================================================= */
+
+                scene.addEventListener(
+                    "arError",
+                    () => {
+
+                        console.error(
+                            "Erro ao iniciar o AR."
                         );
 
                     }
@@ -786,7 +896,7 @@
                     () => {
 
                         console.log(
-                            "Furadeira encontrada."
+                            "FURADEIRA ENCONTRADA!"
                         );
 
                     }
@@ -811,37 +921,6 @@
                     }
                 );
 
-
-                /* =================================================
-                   AR PRONTO
-                ================================================= */
-
-                scene.addEventListener(
-                    "arReady",
-                    () => {
-
-                        console.log(
-                            "AR pronto."
-                        );
-
-                    }
-                );
-
-
-                /* =================================================
-                   ERRO AR
-                ================================================= */
-
-                scene.addEventListener(
-                    "arError",
-                    () => {
-
-                        console.error(
-                            "Erro ao iniciar AR."
-                        );
-
-                    }
-                );
 
             }
         );
