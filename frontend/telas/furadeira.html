@@ -11,11 +11,20 @@
 
     <title>Furadeira - Realidade Aumentada</title>
 
-    <!-- A-Frame -->
+
+    <!-- =====================================================
+         A-FRAME
+         ===================================================== -->
+
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-    <!-- MindAR -->
+
+    <!-- =====================================================
+         MINDAR
+         ===================================================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
 
     <style>
 
@@ -23,21 +32,197 @@
             box-sizing: border-box;
         }
 
+
+        html,
         body {
 
             margin: 0;
 
+            padding: 0;
+
+            width: 100%;
+
+            height: 100%;
+
             overflow: hidden;
 
             font-family: Arial, sans-serif;
+
+            background: #000;
         }
 
 
-        /* =====================================
-           PAINEL
-        ====================================== */
+        /* =====================================================
+           CENA AR
+           ===================================================== */
 
-        #painelFuradeira {
+        a-scene {
+
+            position: fixed;
+
+            inset: 0;
+        }
+
+
+        /* =====================================================
+           BARRA DE STATUS
+           ===================================================== */
+
+        #status-bar {
+
+            position: fixed;
+
+            top: 15px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            z-index: 100;
+
+            width: min(92%, 500px);
+
+            padding: 10px 15px;
+
+            background:
+                rgba(0, 0, 0, 0.75);
+
+            border-radius: 25px;
+
+            color: white;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            pointer-events: none;
+        }
+
+
+        /* =====================================================
+           BADGE
+           ===================================================== */
+
+        #badge {
+
+            display: inline-block;
+
+            margin-bottom: 4px;
+
+            padding: 4px 10px;
+
+            border-radius: 15px;
+
+            background: #f5b400;
+
+            color: #111;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           CONTAINER DOS HOTSPOTS
+           ===================================================== */
+
+        #hotspots-container {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 50;
+
+            pointer-events: none;
+        }
+
+
+        /* =====================================================
+           HOTSPOT
+           ===================================================== */
+
+        .hotspot {
+
+            position: absolute;
+
+            width: 52px;
+
+            height: 52px;
+
+            transform:
+                translate(-50%, -50%);
+
+            border: 3px solid white;
+
+            border-radius: 50%;
+
+            background: #f5b400;
+
+            color: #111;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            cursor: pointer;
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            pointer-events: none;
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.15s ease;
+
+            box-shadow:
+                0 0 0 4px rgba(245, 180, 0, 0.35),
+                0 4px 15px rgba(0, 0, 0, 0.45);
+
+            touch-action: manipulation;
+
+            user-select: none;
+
+            -webkit-user-select: none;
+        }
+
+
+        /* =====================================================
+           HOTSPOT VISÍVEL
+           ===================================================== */
+
+        .hotspot.visible {
+
+            opacity: 1;
+
+            visibility: visible;
+
+            pointer-events: auto;
+        }
+
+
+        .hotspot:active {
+
+            transform:
+                translate(-50%, -50%)
+                scale(0.88);
+        }
+
+
+        /* =====================================================
+           PAINEL DE INFORMAÇÕES
+           ===================================================== */
+
+        #info-panel {
 
             position: fixed;
 
@@ -47,81 +232,113 @@
 
             transform: translateX(-50%);
 
-            width: min(90%, 400px);
+            z-index: 200;
+
+            width: min(92%, 430px);
+
+            max-height: 70vh;
+
+            overflow-y: auto;
 
             padding: 20px;
 
             background:
-                rgba(15, 25, 35, 0.95);
+                rgba(15, 25, 35, 0.97);
 
             color: white;
 
             border: 2px solid #f5b400;
 
-            border-radius: 12px;
+            border-radius: 14px;
 
             box-shadow:
-                0 10px 30px rgba(0, 0, 0, 0.5);
+                0 12px 35px
+                rgba(0, 0, 0, 0.55);
+        }
 
-            z-index: 100;
+
+        /* =====================================================
+           PAINEL OCULTO
+           ===================================================== */
+
+        #info-panel.hidden {
 
             display: none;
         }
 
 
-        #painelFuradeira h2 {
+        /* =====================================================
+           TÍTULO DO PAINEL
+           ===================================================== */
 
-            margin-top: 0;
+        #info-title {
+
+            margin: 0 0 12px 0;
 
             color: #f5b400;
+
+            font-size: 22px;
         }
 
 
-        #painelFuradeira p {
+        #info-text {
+
+            margin: 0 0 12px 0;
 
             line-height: 1.5;
+
+            font-size: 15px;
         }
 
 
-        .status {
+        #info-detail {
 
-            display: inline-block;
+            margin: 0 0 15px 0;
 
-            padding: 6px 12px;
+            padding: 12px;
 
-            background: #16803c;
+            background:
+                rgba(255, 255, 255, 0.07);
 
-            border-radius: 20px;
+            border-left: 3px solid #f5b400;
 
-            font-size: 13px;
+            border-radius: 5px;
 
-            margin-bottom: 10px;
+            line-height: 1.5;
+
+            font-size: 14px;
         }
 
 
-        .botao {
+        /* =====================================================
+           BOTÃO FECHAR
+           ===================================================== */
+
+        #close-panel {
 
             width: 100%;
 
             padding: 12px;
 
-            margin-top: 10px;
-
             border: none;
 
-            border-radius: 6px;
+            border-radius: 7px;
 
             background: #f5b400;
 
             color: #111;
 
+            font-size: 15px;
+
             font-weight: bold;
 
             cursor: pointer;
+
+            touch-action: manipulation;
         }
 
 
-        .botao:hover {
+        #close-panel:active {
 
             background: #ffc72c;
         }
@@ -134,11 +351,34 @@
 <body>
 
 
-    <!-- =====================================
-         CENA AR
-    ====================================== -->
+    <!-- =====================================================
+         STATUS
+         ===================================================== -->
+
+    <div id="status-bar">
+
+        <div id="badge">
+
+            PROCURANDO ALVO
+
+        </div>
+
+        <div id="status">
+
+            Aponte a câmera para a imagem da furadeira.
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CENA DE REALIDADE AUMENTADA
+         ===================================================== -->
 
     <a-scene
+
+        id="ar-scene"
 
         mindar-image="
             imageTargetSrc: ../assets/targets/FuradeiraTargets.mind;
@@ -154,11 +394,15 @@
         renderer="colorManagement: true">
 
 
-        <!-- =================================
+        <!-- =================================================
              CÂMERA
-        ================================== -->
+
+             Mantemos a configuração que já estava funcionando.
+             ================================================= -->
 
         <a-camera
+
+            id="ar-camera"
 
             position="0 0 0"
 
@@ -167,244 +411,234 @@
         </a-camera>
 
 
-        <!-- =================================
+        <!-- =================================================
              TARGET
-        ================================== -->
+             ================================================= -->
 
         <a-entity
 
-            id="furadeiraTarget"
+            id="target"
 
             mindar-image-target="targetIndex: 0">
-
-
-            <!-- =================================
-                 PONTO 1 - CABEÇOTE
-            ================================== -->
-
-            <a-sphere
-
-                class="hotspot"
-
-                id="hotspotCabecote"
-
-                position="-0.08 0.36 0.1"
-
-                radius="0.05"
-
-                material="color: #f5b400;">
-
-            </a-sphere>
-
-
-            <!-- =================================
-                 PONTO 2 - INTERRUPTOR
-            ================================== -->
-
-            <a-sphere
-
-                class="hotspot"
-
-                id="hotspotInterruptor"
-
-                position="0.16 0.36 0.1"
-
-                radius="0.05"
-
-                material="color: #ff4444;">
-
-            </a-sphere>
-
-
-            <!-- =================================
-                 PONTO 3 - MOTOR
-            ================================== -->
-
-            <a-sphere
-
-                class="hotspot"
-
-                id="hotspotMotor"
-
-                position="0.15 0.17 0.1"
-
-                radius="0.05"
-
-                material="color: #2196f3;">
-
-            </a-sphere>
-
-
-            <!-- =================================
-                 PONTO 4 - MANDRIL
-            ================================== -->
-
-            <a-sphere
-
-                class="hotspot"
-
-                id="hotspotMandril"
-
-                position="-0.02 0.13 0.1"
-
-                radius="0.05"
-
-                material="color: #4caf50;">
-
-            </a-sphere>
-
-
-            <!-- =================================
-                 PONTO 5 - ALAVANCA
-            ================================== -->
-
-            <a-sphere
-
-                class="hotspot"
-
-                id="hotspotAlavanca"
-
-                position="0.07 0.08 0.1"
-
-                radius="0.05"
-
-                material="color: #9c27b0;">
-
-            </a-sphere>
-
-
-            <!-- =================================
-                 PONTO 6 - MESA
-            ================================== -->
-
-            <a-sphere
-
-                class="hotspot"
-
-                id="hotspotMesa"
-
-                position="-0.02 -0.13 0.1"
-
-                radius="0.05"
-
-                material="color: #ff9800;">
-
-            </a-sphere>
-
-
-            <!-- =================================
-                 PONTO 7 - COLUNA
-            ================================== -->
-
-            <a-sphere
-
-                class="hotspot"
-
-                id="hotspotColuna"
-
-                position="0.13 -0.18 0.1"
-
-                radius="0.05"
-
-                material="color: #00bcd4;">
-
-            </a-sphere>
-
-
-            <!-- =================================
-                 PONTO 8 - BASE
-            ================================== -->
-
-            <a-sphere
-
-                class="hotspot"
-
-                id="hotspotBase"
-
-                position="-0.02 -0.38 0.1"
-
-                radius="0.05"
-
-                material="color: #795548;">
-
-            </a-sphere>
-
 
         </a-entity>
 
     </a-scene>
 
 
-    <!-- =====================================
-         PAINEL HTML
-    ====================================== -->
+    <!-- =====================================================
+         HOTSPOTS HTML
+         ===================================================== -->
 
-    <div id="painelFuradeira">
-
-
-        <span class="status">
-
-            ● EQUIPAMENTO RECONHECIDO
-
-        </span>
+    <div id="hotspots-container">
 
 
-        <h2 id="tituloPeca">
-            Furadeira Industrial
-        </h2>
-
-
-        <p>
-
-            <strong>Modelo:</strong>
-
-            <span id="modeloPeca">
-                FUR-2026
-            </span>
-
-        </p>
-
-
-        <p>
-
-            <strong>Status:</strong>
-
-            <span id="statusPeca">
-                Operacional
-            </span>
-
-        </p>
-
-
-        <p>
-
-            <strong>Informações:</strong>
-
-            <span id="descricaoPeca">
-
-                Selecione um ponto da furadeira.
-
-            </span>
-
-        </p>
-
+        <!-- CABEÇOTE -->
 
         <button
 
-            class="botao"
+            class="hotspot"
 
-            id="botaoManutencao">
+            data-topic="cabecote"
 
-            Procedimentos de manutenção
+            data-x="-0.08"
+
+            data-y="0.36"
+
+            data-z="0.1"
+
+            aria-label="Cabeçote">
+
+            1
 
         </button>
 
 
+        <!-- INTERRUPTOR -->
+
         <button
 
-            class="botao"
+            class="hotspot"
 
-            id="botaoFechar">
+            data-topic="interruptor"
+
+            data-x="0.16"
+
+            data-y="0.36"
+
+            data-z="0.1"
+
+            aria-label="Interruptor">
+
+            2
+
+        </button>
+
+
+        <!-- MOTOR -->
+
+        <button
+
+            class="hotspot"
+
+            data-topic="motor"
+
+            data-x="0.15"
+
+            data-y="0.17"
+
+            data-z="0.1"
+
+            aria-label="Motor">
+
+            3
+
+        </button>
+
+
+        <!-- MANDRIL -->
+
+        <button
+
+            class="hotspot"
+
+            data-topic="mandril"
+
+            data-x="-0.02"
+
+            data-y="0.13"
+
+            data-z="0.1"
+
+            aria-label="Mandril">
+
+            4
+
+        </button>
+
+
+        <!-- ALAVANCA -->
+
+        <button
+
+            class="hotspot"
+
+            data-topic="alavanca"
+
+            data-x="0.07"
+
+            data-y="0.08"
+
+            data-z="0.1"
+
+            aria-label="Alavanca">
+
+            5
+
+        </button>
+
+
+        <!-- MESA -->
+
+        <button
+
+            class="hotspot"
+
+            data-topic="mesa"
+
+            data-x="-0.02"
+
+            data-y="-0.13"
+
+            data-z="0.1"
+
+            aria-label="Mesa">
+
+            6
+
+        </button>
+
+
+        <!-- COLUNA -->
+
+        <button
+
+            class="hotspot"
+
+            data-topic="coluna"
+
+            data-x="0.13"
+
+            data-y="-0.18"
+
+            data-z="0.1"
+
+            aria-label="Coluna">
+
+            7
+
+        </button>
+
+
+        <!-- BASE -->
+
+        <button
+
+            class="hotspot"
+
+            data-topic="base"
+
+            data-x="-0.02"
+
+            data-y="-0.38"
+
+            data-z="0.1"
+
+            aria-label="Base">
+
+            8
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         PAINEL DE INFORMAÇÕES
+         ===================================================== -->
+
+    <div
+
+        id="info-panel"
+
+        class="hidden">
+
+
+        <h2 id="info-title">
+
+            Componente
+
+        </h2>
+
+
+        <p id="info-text">
+
+            Informações do componente.
+
+        </p>
+
+
+        <p id="info-detail">
+
+            Detalhes do componente.
+
+        </p>
+
+
+        <button
+
+            id="close-panel">
 
             Fechar
 
@@ -414,417 +648,640 @@
     </div>
 
 
-    <!-- =====================================
+    <!-- =====================================================
          JAVASCRIPT
-    ====================================== -->
+         ===================================================== -->
 
     <script>
 
-
-        /* =====================================
-           DADOS
-        ====================================== */
-
-        const informacoes = {
-
-            cabecote: {
-
-                titulo: "Cabeçote",
-
-                modelo: "CAB-2026",
-
-                status: "Operacional",
-
-                descricao:
-                    "Conjunto superior da furadeira."
-
-            },
-
-
-            interruptor: {
-
-                titulo: "Interruptor",
-
-                modelo: "INT-220",
-
-                status: "Operacional",
-
-                descricao:
-                    "Controla o acionamento da máquina."
-
-            },
-
-
-            motor: {
-
-                titulo: "Motor",
-
-                modelo: "MTR-500",
-
-                status: "Operacional",
-
-                descricao:
-                    "Responsável pelo movimento rotacional."
-
-            },
-
-
-            mandril: {
-
-                titulo: "Mandril",
-
-                modelo: "MDR-16",
-
-                status: "Operacional",
-
-                descricao:
-                    "Responsável pela fixação da broca."
-
-            },
-
-
-            alavanca: {
-
-                titulo: "Alavanca",
-
-                modelo: "ALV-300",
-
-                status: "Operacional",
-
-                descricao:
-                    "Controla o avanço da broca."
-
-            },
-
-
-            mesa: {
-
-                titulo: "Mesa",
-
-                modelo: "MESA-400",
-
-                status: "Operacional",
-
-                descricao:
-                    "Área de apoio da peça de trabalho."
-
-            },
-
-
-            coluna: {
-
-                titulo: "Coluna",
-
-                modelo: "COL-500",
-
-                status: "Operacional",
-
-                descricao:
-                    "Estrutura vertical da máquina."
-
-            },
-
-
-            base: {
-
-                titulo: "Base",
-
-                modelo: "BAS-600",
-
-                status: "Operacional",
-
-                descricao:
-                    "Responsável pela estabilidade."
-
-            }
-
-        };
-
-
-        /* =====================================
-           ABRIR INFORMAÇÃO
-        ====================================== */
-
-        function abrirInformacao(tipo) {
-
-            const info =
-                informacoes[tipo];
-
-
-            if (!info) {
-
-                return;
-
-            }
-
-
-            document
-                .querySelector("#tituloPeca")
-                .textContent =
-                info.titulo;
-
-
-            document
-                .querySelector("#modeloPeca")
-                .textContent =
-                info.modelo;
-
-
-            document
-                .querySelector("#statusPeca")
-                .textContent =
-                info.status;
-
-
-            document
-                .querySelector("#descricaoPeca")
-                .textContent =
-                info.descricao;
-
-
-            document
-                .querySelector("#painelFuradeira")
-                .style.display =
-                "block";
-
-        }
-
-
-        /* =====================================
-           FECHAR PAINEL
-        ====================================== */
-
-        function fecharPainel() {
-
-            document
-                .querySelector("#painelFuradeira")
-                .style.display =
-                "none";
-
-        }
-
-
-        /* =====================================
-           HOTSPOTS
-        ====================================== */
-
-        document
-            .querySelector("#hotspotCabecote")
-            .addEventListener(
-                "click",
-                () => {
-
-                    abrirInformacao(
-                        "cabecote"
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelector("#hotspotInterruptor")
-            .addEventListener(
-                "click",
-                () => {
-
-                    abrirInformacao(
-                        "interruptor"
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelector("#hotspotMotor")
-            .addEventListener(
-                "click",
-                () => {
-
-                    abrirInformacao(
-                        "motor"
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelector("#hotspotMandril")
-            .addEventListener(
-                "click",
-                () => {
-
-                    abrirInformacao(
-                        "mandril"
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelector("#hotspotAlavanca")
-            .addEventListener(
-                "click",
-                () => {
-
-                    abrirInformacao(
-                        "alavanca"
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelector("#hotspotMesa")
-            .addEventListener(
-                "click",
-                () => {
-
-                    abrirInformacao(
-                        "mesa"
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelector("#hotspotColuna")
-            .addEventListener(
-                "click",
-                () => {
-
-                    abrirInformacao(
-                        "coluna"
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelector("#hotspotBase")
-            .addEventListener(
-                "click",
-                () => {
-
-                    abrirInformacao(
-                        "base"
-                    );
-
-                }
-            );
-
-
-        /* =====================================
-           BOTÃO FECHAR
-        ====================================== */
-
-        document
-            .querySelector("#botaoFechar")
-            .addEventListener(
-                "click",
-                fecharPainel
-            );
-
-
-        /* =====================================
-           BOTÃO MANUTENÇÃO
-        ====================================== */
-
-        document
-            .querySelector("#botaoManutencao")
-            .addEventListener(
-                "click",
-                () => {
-
-                    alert(
-                        "Procedimentos de manutenção"
-                    );
-
-                }
-            );
-
-
-        /* =====================================
-           TARGET
-        ====================================== */
-
-        const target =
-            document.querySelector(
-                "#furadeiraTarget"
-            );
-
-
-        target.addEventListener(
-            "targetFound",
+        document.addEventListener(
+            "DOMContentLoaded",
             () => {
 
-                console.log(
-                    "================================"
+
+                /* =================================================
+                   1. REFERÊNCIAS
+                   ================================================= */
+
+                const scene =
+                    document.querySelector(
+                        "#ar-scene"
+                    );
+
+
+                const target =
+                    document.querySelector(
+                        "#target"
+                    );
+
+
+                const cameraElement =
+                    document.querySelector(
+                        "#ar-camera"
+                    );
+
+
+                /* =================================================
+                   2. INTERFACE
+                   ================================================= */
+
+                const status =
+                    document.querySelector(
+                        "#status"
+                    );
+
+
+                const badge =
+                    document.querySelector(
+                        "#badge"
+                    );
+
+
+                const panel =
+                    document.querySelector(
+                        "#info-panel"
+                    );
+
+
+                const panelTitle =
+                    document.querySelector(
+                        "#info-title"
+                    );
+
+
+                const panelText =
+                    document.querySelector(
+                        "#info-text"
+                    );
+
+
+                const panelDetail =
+                    document.querySelector(
+                        "#info-detail"
+                    );
+
+
+                const closeButton =
+                    document.querySelector(
+                        "#close-panel"
+                    );
+
+
+                /* =================================================
+                   3. HOTSPOTS
+                   ================================================= */
+
+                const hotspots =
+                    Array.from(
+                        document.querySelectorAll(
+                            ".hotspot"
+                        )
+                    );
+
+
+                /* =================================================
+                   4. CONTROLE DE TRACKING
+                   ================================================= */
+
+                let tracking =
+                    false;
+
+
+                /* =================================================
+                   5. BASE DE DADOS
+                   ================================================= */
+
+                const information = {
+
+
+                    cabecote: {
+
+                        title:
+                            "Cabeçote",
+
+                        text:
+                            "Conjunto superior da furadeira responsável por abrigar parte do sistema de acionamento e transmissão.",
+
+                        detail:
+                            "Verifique periodicamente fixações, ruídos anormais e sinais de desgaste."
+
+                    },
+
+
+                    interruptor: {
+
+                        title:
+                            "Interruptor",
+
+                        text:
+                            "Componente utilizado para ligar e desligar a furadeira.",
+
+                        detail:
+                            "Antes de qualquer manutenção elétrica, desligue a alimentação do equipamento."
+
+                    },
+
+
+                    motor: {
+
+                        title:
+                            "Motor",
+
+                        text:
+                            "Motor elétrico responsável por fornecer o movimento rotacional necessário à operação da furadeira.",
+
+                        detail:
+                            "Observe aquecimento excessivo, ruídos, vibrações e alterações no funcionamento."
+
+                    },
+
+
+                    mandril: {
+
+                        title:
+                            "Mandril",
+
+                        text:
+                            "Componente responsável pela fixação da broca durante a operação.",
+
+                        detail:
+                            "A broca deve estar corretamente centralizada e firmemente presa antes da operação."
+
+                    },
+
+
+                    alavanca: {
+
+                        title:
+                            "Alavanca de avanço",
+
+                        text:
+                            "Mecanismo utilizado para movimentar o conjunto de perfuração verticalmente.",
+
+                        detail:
+                            "O movimento deve ocorrer de maneira controlada e sem travamentos."
+
+                    },
+
+
+                    mesa: {
+
+                        title:
+                            "Mesa de trabalho",
+
+                        text:
+                            "Superfície utilizada para apoiar e posicionar a peça que será trabalhada.",
+
+                        detail:
+                            "Verifique se a peça está devidamente apoiada e fixada antes da operação."
+
+                    },
+
+
+                    coluna: {
+
+                        title:
+                            "Coluna",
+
+                        text:
+                            "Estrutura vertical que sustenta o conjunto superior da furadeira.",
+
+                        detail:
+                            "A coluna contribui para o alinhamento e estabilidade do conjunto."
+
+                    },
+
+
+                    base: {
+
+                        title:
+                            "Base",
+
+                        text:
+                            "Estrutura inferior responsável pelo apoio e estabilidade da furadeira.",
+
+                        detail:
+                            "Verifique regularmente a fixação e estabilidade da máquina."
+
+                    }
+
+                };
+
+
+                /* =================================================
+                   6. ABRIR PAINEL
+                   ================================================= */
+
+                function showInformation(
+                    topicName
+                ) {
+
+
+                    const selected =
+                        information[
+                            topicName
+                        ];
+
+
+                    if (!selected) {
+
+                        console.warn(
+                            "Hotspot sem informação:",
+                            topicName
+                        );
+
+                        return;
+
+                    }
+
+
+                    panelTitle.textContent =
+                        selected.title;
+
+
+                    panelText.textContent =
+                        selected.text;
+
+
+                    panelDetail.textContent =
+                        selected.detail;
+
+
+                    panel.classList.remove(
+                        "hidden"
+                    );
+
+                }
+
+
+                /* =================================================
+                   7. FECHAR PAINEL
+                   ================================================= */
+
+                function hideInformation() {
+
+                    panel.classList.add(
+                        "hidden"
+                    );
+
+                }
+
+
+                /* =================================================
+                   8. CLIQUE/TOQUE NOS HOTSPOTS
+                   ================================================= */
+
+                hotspots.forEach(
+                    (button) => {
+
+
+                        button.addEventListener(
+                            "pointerup",
+                            (event) => {
+
+
+                                event.preventDefault();
+
+                                event.stopPropagation();
+
+
+                                const topicName =
+                                    button.dataset.topic;
+
+
+                                showInformation(
+                                    topicName
+                                );
+
+                            }
+                        );
+
+                    }
                 );
 
-                console.log(
-                    "FURADEIRA ENCONTRADA!"
+
+                /* =================================================
+                   9. FECHAR
+                   ================================================= */
+
+                closeButton.addEventListener(
+                    "pointerup",
+                    (event) => {
+
+                        event.preventDefault();
+
+                        hideInformation();
+
+                    }
                 );
 
-                console.log(
-                    "================================"
+
+                /* =================================================
+                   10. MINDAR PRONTO
+                   ================================================= */
+
+                scene.addEventListener(
+                    "arReady",
+                    () => {
+
+
+                        status.textContent =
+                            "Câmera pronta. Aponte para a imagem da furadeira.";
+
+
+                        badge.textContent =
+                            "PROCURANDO ALVO";
+
+                    }
+                );
+
+
+                /* =================================================
+                   11. ERRO
+                   ================================================= */
+
+                scene.addEventListener(
+                    "arError",
+                    () => {
+
+
+                        status.textContent =
+                            "Não foi possível iniciar a câmera.";
+
+
+                        badge.textContent =
+                            "ERRO";
+
+                    }
+                );
+
+
+                /* =================================================
+                   12. TARGET ENCONTRADO
+                   ================================================= */
+
+                target.addEventListener(
+                    "targetFound",
+                    () => {
+
+
+                        tracking =
+                            true;
+
+
+                        status.textContent =
+                            "Furadeira reconhecida. Toque em um ponto.";
+
+
+                        badge.textContent =
+                            "● RA ATIVA";
+
+
+                        hotspots.forEach(
+                            (button) => {
+
+                                button.classList.add(
+                                    "visible"
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+
+                /* =================================================
+                   13. TARGET PERDIDO
+                   ================================================= */
+
+                target.addEventListener(
+                    "targetLost",
+                    () => {
+
+
+                        tracking =
+                            false;
+
+
+                        status.textContent =
+                            "Alvo perdido. Aponte novamente para a imagem.";
+
+
+                        badge.textContent =
+                            "PROCURANDO ALVO";
+
+
+                        hotspots.forEach(
+                            (button) => {
+
+                                button.classList.remove(
+                                    "visible"
+                                );
+
+                            }
+                        );
+
+
+                        hideInformation();
+
+                    }
+                );
+
+
+                /* =================================================
+                   14. POSIÇÃO DOS HOTSPOTS
+                   ================================================= */
+
+                function updateHotspotPositions() {
+
+
+                    requestAnimationFrame(
+                        updateHotspotPositions
+                    );
+
+
+                    if (!tracking) {
+
+                        return;
+
+                    }
+
+
+                    /* ---------------------------------------------
+                       Obtém a câmera Three.js
+                       --------------------------------------------- */
+
+                    const camera =
+                        cameraElement.getObject3D(
+                            "camera"
+                        );
+
+
+                    if (
+                        !camera ||
+                        !target.object3D
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    /* ---------------------------------------------
+                       Atualiza matrizes
+                       --------------------------------------------- */
+
+                    target.object3D.updateMatrixWorld(
+                        true
+                    );
+
+
+                    camera.updateMatrixWorld(
+                        true
+                    );
+
+
+                    /* ---------------------------------------------
+                       Atualiza cada hotspot
+                       --------------------------------------------- */
+
+                    hotspots.forEach(
+                        (button) => {
+
+
+                            const localPoint =
+                                new THREE.Vector3(
+
+                                    Number(
+                                        button.dataset.x
+                                    ),
+
+                                    Number(
+                                        button.dataset.y
+                                    ),
+
+                                    Number(
+                                        button.dataset.z
+                                    )
+
+                                );
+
+
+                            /* -------------------------------------
+                               Local → Mundo
+                               ------------------------------------- */
+
+                            const worldPoint =
+                                target.object3D.localToWorld(
+                                    localPoint
+                                );
+
+
+                            /* -------------------------------------
+                               Mundo → Tela
+                               ------------------------------------- */
+
+                            const projectedPoint =
+                                worldPoint
+                                    .clone()
+                                    .project(
+                                        camera
+                                    );
+
+
+                            /* -------------------------------------
+                               Normalização para pixels
+                               ------------------------------------- */
+
+                            const screenX =
+                                (
+                                    projectedPoint.x *
+                                    0.5 +
+                                    0.5
+                                ) *
+                                window.innerWidth;
+
+
+                            const screenY =
+                                (
+                                    -projectedPoint.y *
+                                    0.5 +
+                                    0.5
+                                ) *
+                                window.innerHeight;
+
+
+                            /* -------------------------------------
+                               Posiciona botão
+                               ------------------------------------- */
+
+                            button.style.left =
+                                `${screenX}px`;
+
+
+                            button.style.top =
+                                `${screenY}px`;
+
+
+                            /* -------------------------------------
+                               Verifica se está dentro da tela
+                               ------------------------------------- */
+
+                            const insideScreen =
+
+                                projectedPoint.z > -1 &&
+
+                                projectedPoint.z < 1 &&
+
+                                screenX > -80 &&
+
+                                screenX <
+                                    window.innerWidth + 80 &&
+
+                                screenY > -80 &&
+
+                                screenY <
+                                    window.innerHeight + 80;
+
+
+                            button.style.visibility =
+                                insideScreen
+                                    ? "visible"
+                                    : "hidden";
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   15. INICIA POSICIONAMENTO
+                   ================================================= */
+
+                updateHotspotPositions();
+
+
+                /* =================================================
+                   16. REDIMENSIONAMENTO
+                   ================================================= */
+
+                window.addEventListener(
+                    "resize",
+                    () => {
+
+                        /*
+                         * O requestAnimationFrame já recalcula
+                         * continuamente, então não precisamos
+                         * fazer nada aqui.
+                         */
+
+                    }
                 );
 
             }
         );
-
-
-        target.addEventListener(
-            "targetLost",
-            () => {
-
-                console.log(
-                    "Furadeira perdida"
-                );
-
-            }
-        );
-
-
-        /* =====================================
-           A-FRAME
-        ====================================== */
-
-        const scene =
-            document.querySelector(
-                "a-scene"
-            );
-
-
-        scene.addEventListener(
-            "loaded",
-            () => {
-
-                console.log(
-                    "A-Frame carregado"
-                );
-
-            }
-        );
-
-
-        scene.addEventListener(
-            "renderstart",
-            () => {
-
-                console.log(
-                    "Renderização iniciada"
-                );
-
-            }
-        );
-
 
     </script>
 
