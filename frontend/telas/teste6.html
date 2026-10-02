@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Teste 6 - Object3D dos Hotspots</title>
+
+
+    <!-- =====================================================
+         A-FRAME
+    ====================================================== -->
+
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+
+    <!-- =====================================================
+         MINDAR
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+
+    <style>
+
+        html,
+        body {
+
+            margin: 0;
+
+            padding: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            overflow: hidden;
+
+            background: #000;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         CENA AR
+    ====================================================== -->
+
+    <a-scene
+
+        id="ar-scene"
+
+        mindar-image="
+            imageTargetSrc: ../assets/targets/FuradeiraTargets.mind;
+            uiLoading: yes;
+            uiScanning: yes;
+            uiError: yes;
+        "
+
+        vr-mode-ui="enabled: false"
+
+        device-orientation-permission-ui="enabled: false"
+
+        renderer="colorManagement: true">
+
+
+        <!-- =================================================
+             CÂMERA
+        ================================================== -->
+
+        <a-camera
+
+            id="ar-camera"
+
+            position="0 0 0"
+
+            look-controls="enabled: false">
+
+        </a-camera>
+
+
+        <!-- =================================================
+             TARGET
+        ================================================== -->
+
+        <a-entity
+
+            id="furadeiraTarget"
+
+            mindar-image-target="targetIndex: 0">
+
+
+            <!-- =================================================
+                 HOTSPOT 1
+            ================================================== -->
+
+            <a-sphere
+
+                class="hotspot"
+
+                data-topic="motor"
+
+                position="0 0 0"
+
+                radius="0.08"
+
+                material="color: red;">
+
+            </a-sphere>
+
+
+            <!-- =================================================
+                 HOTSPOT 2
+            ================================================== -->
+
+            <a-sphere
+
+                class="hotspot"
+
+                data-topic="mandril"
+
+                position="0.2 0.1 0"
+
+                radius="0.08"
+
+                material="color: blue;">
+
+            </a-sphere>
+
+
+            <!-- =================================================
+                 HOTSPOT 3
+            ================================================== -->
+
+            <a-sphere
+
+                class="hotspot"
+
+                data-topic="cabecote"
+
+                position="-0.2 0.1 0"
+
+                radius="0.08"
+
+                material="color: green;">
+
+            </a-sphere>
+
+
+        </a-entity>
+
+
+    </a-scene>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+
+                console.log(
+                    "================================"
+                );
+
+                console.log(
+                    "TESTE 6 INICIADO"
+                );
+
+                console.log(
+                    "================================"
+                );
+
+
+                const scene =
+                    document.querySelector(
+                        "#ar-scene"
+                    );
+
+
+                /* =================================================
+                   ESPERA O A-FRAME COMEÇAR A RENDERIZAR
+                ================================================== */
+
+                scene.addEventListener(
+                    "renderstart",
+                    () => {
+
+
+                        console.log(
+                            "Renderização iniciada."
+                        );
+
+
+                        /* =========================================
+                           BUSCA TODOS OS HOTSPOTS
+                        ========================================== */
+
+                        const hotspots =
+                            Array.from(
+                                document.querySelectorAll(
+                                    ".hotspot"
+                                )
+                            );
+
+
+                        console.log(
+                            "Quantidade de hotspots:",
+                            hotspots.length
+                        );
+
+
+                        if (
+                            hotspots.length === 0
+                        ) {
+
+                            console.error(
+                                "ERRO: nenhum hotspot encontrado."
+                            );
+
+                            return;
+
+                        }
+
+
+                        /* =========================================
+                           ANALISA CADA HOTSPOT
+                        ========================================== */
+
+                        hotspots.forEach(
+                            (hotspot, index) => {
+
+
+                                console.log(
+                                    "--------------------------------"
+                                );
+
+
+                                console.log(
+                                    "HOTSPOT:",
+                                    index + 1
+                                );
+
+
+                                console.log(
+                                    "Elemento:",
+                                    hotspot
+                                );
+
+
+                                console.log(
+                                    "Topic:",
+                                    hotspot.dataset.topic
+                                );
+
+
+                                console.log(
+                                    "Object3D:",
+                                    hotspot.object3D
+                                );
+
+
+                                /* =================================
+                                   VERIFICA OBJECT3D
+                                ================================== */
+
+                                if (
+                                    hotspot.object3D
+                                ) {
+
+                                    console.log(
+                                        "SUCESSO: Object3D encontrado."
+                                    );
+
+
+                                    /* =============================
+                                       MOSTRA POSIÇÃO 3D
+                                    ============================== */
+
+                                    console.log(
+                                        "Posição local:",
+                                        hotspot.object3D.position
+                                    );
+
+
+                                    console.log(
+                                        "Posição mundial:",
+                                        hotspot.object3D.getWorldPosition(
+                                            new THREE.Vector3()
+                                        )
+                                    );
+
+
+                                } else {
+
+                                    console.error(
+                                        "ERRO: Object3D NÃO encontrado."
+                                    );
+
+                                }
+
+
+                            }
+                        );
+
+
+                        console.log(
+                            "================================"
+                        );
+
+                        console.log(
+                            "TESTE 6 FINALIZADO"
+                        );
+
+                        console.log(
+                            "================================"
+                        );
+
+
+                    }
+                );
+
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

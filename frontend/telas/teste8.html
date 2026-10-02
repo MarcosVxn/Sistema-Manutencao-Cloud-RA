@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Teste 8 - Hotspot + Painel</title>
+
+
+    <!-- A-FRAME -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+
+    <!-- MINDAR -->
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+
+    <style>
+
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            height: 100%;
+
+            overflow: hidden;
+
+            background: #000;
+
+            font-family: Arial, sans-serif;
+
+        }
+
+
+        /* =====================================================
+           PAINEL
+        ====================================================== */
+
+        #painel {
+
+            position: fixed;
+
+            left: 50%;
+
+            bottom: 20px;
+
+            transform: translateX(-50%);
+
+            width: min(90%, 400px);
+
+            padding: 20px;
+
+            background: rgba(
+                15,
+                25,
+                35,
+                0.95
+            );
+
+            color: white;
+
+            border: 2px solid #f5b400;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0, 0, 0, 0.5);
+
+            z-index: 1000;
+
+            display: none;
+
+        }
+
+
+        #painel h2 {
+
+            margin-top: 0;
+
+            color: #f5b400;
+
+        }
+
+
+        #fechar {
+
+            width: 100%;
+
+            padding: 12px;
+
+            margin-top: 15px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #f5b400;
+
+            color: #111;
+
+            font-weight: bold;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         CENA AR
+    ====================================================== -->
+
+    <a-scene
+
+        id="ar-scene"
+
+        mindar-image="
+            imageTargetSrc: ../assets/targets/FuradeiraTargets.mind;
+            uiLoading: yes;
+            uiScanning: yes;
+            uiError: yes;
+        "
+
+        vr-mode-ui="enabled: false"
+
+        device-orientation-permission-ui="enabled: false"
+
+        renderer="colorManagement: true">
+
+
+        <!-- =================================================
+             CÂMERA
+        ================================================== -->
+
+        <a-camera
+
+            id="ar-camera"
+
+            position="0 0 0"
+
+            look-controls="enabled: false">
+
+        </a-camera>
+
+
+        <!-- =================================================
+             TARGET
+        ================================================== -->
+
+        <a-entity
+
+            id="furadeiraTarget"
+
+            mindar-image-target="targetIndex: 0">
+
+
+            <!-- =================================================
+                 HOTSPOT 1
+            ================================================== -->
+
+            <a-sphere
+
+                class="hotspot"
+
+                data-topic="motor"
+
+                position="0 0 0"
+
+                radius="0.08"
+
+                material="color: red;">
+
+            </a-sphere>
+
+
+            <!-- =================================================
+                 HOTSPOT 2
+            ================================================== -->
+
+            <a-sphere
+
+                class="hotspot"
+
+                data-topic="mandril"
+
+                position="0.2 0.1 0"
+
+                radius="0.08"
+
+                material="color: blue;">
+
+            </a-sphere>
+
+
+            <!-- =================================================
+                 HOTSPOT 3
+            ================================================== -->
+
+            <a-sphere
+
+                class="hotspot"
+
+                data-topic="cabecote"
+
+                position="-0.2 0.1 0"
+
+                radius="0.08"
+
+                material="color: green;">
+
+            </a-sphere>
+
+
+        </a-entity>
+
+
+    </a-scene>
+
+
+    <!-- =====================================================
+         PAINEL HTML
+    ====================================================== -->
+
+    <div id="painel">
+
+        <h2 id="titulo">
+            Equipamento
+        </h2>
+
+        <p id="descricao">
+            Informação do componente.
+        </p>
+
+        <p id="detalhes">
+            Detalhes.
+        </p>
+
+        <button id="fechar">
+            Fechar
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+
+                console.log(
+                    "================================"
+                );
+
+                console.log(
+                    "TESTE 8 INICIADO"
+                );
+
+                console.log(
+                    "================================"
+                );
+
+
+                const scene =
+                    document.querySelector(
+                        "#ar-scene"
+                    );
+
+
+                const painel =
+                    document.querySelector(
+                        "#painel"
+                    );
+
+
+                const titulo =
+                    document.querySelector(
+                        "#titulo"
+                    );
+
+
+                const descricao =
+                    document.querySelector(
+                        "#descricao"
+                    );
+
+
+                const detalhes =
+                    document.querySelector(
+                        "#detalhes"
+                    );
+
+
+                const fechar =
+                    document.querySelector(
+                        "#fechar"
+                    );
+
+
+                /* =================================================
+                   BANCO DE INFORMAÇÕES
+                ================================================== */
+
+                const information = {
+
+
+                    motor: {
+
+                        title:
+                            "Motor",
+
+                        text:
+                            "Motor elétrico responsável pelo movimento da furadeira.",
+
+                        detail:
+                            "Verifique aquecimento, ruídos e vibrações anormais."
+
+                    },
+
+
+                    mandril: {
+
+                        title:
+                            "Mandril",
+
+                        text:
+                            "Componente responsável pela fixação da broca.",
+
+                        detail:
+                            "A broca deve estar corretamente centralizada e presa."
+
+                    },
+
+
+                    cabecote: {
+
+                        title:
+                            "Cabeçote",
+
+                        text:
+                            "Conjunto superior responsável pelo acionamento da máquina.",
+
+                        detail:
+                            "Verifique fixações e sinais de desgaste."
+
+                    }
+
+                };
+
+
+                /* =================================================
+                   FUNÇÃO PARA ABRIR PAINEL
+                ================================================== */
+
+                function mostrarPainel(
+                    topic
+                ) {
+
+
+                    console.log(
+                        "Abrindo painel:",
+                        topic
+                    );
+
+
+                    const info =
+                        information[topic];
+
+
+                    if (!info) {
+
+                        console.error(
+                            "Informação não encontrada:",
+                            topic
+                        );
+
+                        return;
+
+                    }
+
+
+                    titulo.textContent =
+                        info.title;
+
+
+                    descricao.textContent =
+                        info.text;
+
+
+                    detalhes.textContent =
+                        info.detail;
+
+
+                    painel.style.display =
+                        "block";
+
+
+                }
+
+
+                /* =================================================
+                   FECHAR PAINEL
+                ================================================== */
+
+                fechar.addEventListener(
+                    "click",
+                    () => {
+
+                        painel.style.display =
+                            "none";
+
+                    }
+                );
+
+
+                /* =================================================
+                   ESPERA O RENDERER
+                ================================================== */
+
+                scene.addEventListener(
+                    "renderstart",
+                    () => {
+
+
+                        console.log(
+                            "Renderização iniciada."
+                        );
+
+
+                        const camera =
+                            scene.camera;
+
+
+                        const canvas =
+                            scene.renderer
+                                .domElement;
+
+
+                        const raycaster =
+                            new THREE.Raycaster();
+
+
+                        const mouse =
+                            new THREE.Vector2();
+
+
+                        const hotspots =
+                            Array.from(
+                                document.querySelectorAll(
+                                    ".hotspot"
+                                )
+                            );
+
+
+                        const objetos =
+                            hotspots
+                                .map(
+                                    hotspot =>
+                                        hotspot.object3D
+                                )
+                                .filter(
+                                    object =>
+                                        object
+                                );
+
+
+                        console.log(
+                            "Hotspots:",
+                            hotspots.length
+                        );
+
+
+                        /* =================================================
+                           TOQUE
+                        ================================================== */
+
+                        canvas.addEventListener(
+                            "pointerup",
+                            (event) => {
+
+
+                                console.log(
+                                    "TOQUE RECEBIDO"
+                                );
+
+
+                                const rect =
+                                    canvas.getBoundingClientRect();
+
+
+                                mouse.x =
+                                    (
+                                        (
+                                            event.clientX -
+                                            rect.left
+                                        )
+                                        /
+                                        rect.width
+                                    ) * 2 - 1;
+
+
+                                mouse.y =
+                                    -(
+                                        (
+                                            event.clientY -
+                                            rect.top
+                                        )
+                                        /
+                                        rect.height
+                                    ) * 2 + 1;
+
+
+                                /* =========================================
+                                   RAY
+                                ========================================== */
+
+                                raycaster.setFromCamera(
+                                    mouse,
+                                    camera
+                                );
+
+
+                                /* =========================================
+                                   INTERSEÇÕES
+                                ========================================== */
+
+                                const intersections =
+                                    raycaster.intersectObjects(
+                                        objetos,
+                                        true
+                                    );
+
+
+                                console.log(
+                                    "Interseções:",
+                                    intersections.length
+                                );
+
+
+                                if (
+                                    intersections.length === 0
+                                ) {
+
+                                    return;
+
+                                }
+
+
+                                /* =========================================
+                                   OBJETO ATINGIDO
+                                ========================================== */
+
+                                const objeto =
+                                    intersections[0]
+                                        .object;
+
+
+                                let hotspot =
+                                    null;
+
+
+                                /* =========================================
+                                   LOCALIZA HOTSPOT
+                                ========================================== */
+
+                                for (
+                                    const item
+                                    of hotspots
+                                ) {
+
+
+                                    if (
+                                        item.object3D ===
+                                        objeto
+                                    ) {
+
+                                        hotspot =
+                                            item;
+
+                                        break;
+
+                                    }
+
+
+                                    if (
+                                        item.object3D.contains(
+                                            objeto
+                                        )
+                                    ) {
+
+                                        hotspot =
+                                            item;
+
+                                        break;
+
+                                    }
+
+                                }
+
+
+                                if (!hotspot) {
+
+                                    console.error(
+                                        "Hotspot não identificado."
+                                    );
+
+                                    return;
+
+                                }
+
+
+                                /* =========================================
+                                   DATA-TOPIC
+                                ========================================== */
+
+                                const topic =
+                                    hotspot.dataset.topic;
+
+
+                                console.log(
+                                    "HOTSPOT:",
+                                    topic
+                                );
+
+
+                                /* =========================================
+                                   ABRE PAINEL
+                                ========================================== */
+
+                                mostrarPainel(
+                                    topic
+                                );
+
+
+                            },
+
+                            {
+                                passive: false
+                            }
+
+                        );
+
+
+                        console.log(
+                            "================================"
+                        );
+
+                        console.log(
+                            "TESTE 8 PRONTO"
+                        );
+
+                        console.log(
+                            "Toque nos pontos."
+                        );
+
+                        console.log(
+                            "================================"
+                        );
+
+
+                    }
+                );
+
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

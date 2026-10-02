@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Teste 4 - Camera e Renderer</title>
+
+
+    <!-- =====================================================
+         A-FRAME
+    ====================================================== -->
+
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+
+    <!-- =====================================================
+         MINDAR
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+
+    <style>
+
+        html,
+        body {
+
+            margin: 0;
+
+            padding: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            overflow: hidden;
+
+            background: #000;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         CENA AR
+
+         Mantida exatamente como nos testes anteriores.
+    ====================================================== -->
+
+    <a-scene
+
+        id="ar-scene"
+
+        mindar-image="
+            imageTargetSrc: ../assets/targets/FuradeiraTargets.mind;
+            uiLoading: yes;
+            uiScanning: yes;
+            uiError: yes;
+        "
+
+        vr-mode-ui="enabled: false"
+
+        device-orientation-permission-ui="enabled: false"
+
+        renderer="colorManagement: true">
+
+
+        <!-- =================================================
+             CÂMERA
+
+             NÃO adicionar cursor ou raycaster.
+        ================================================== -->
+
+        <a-camera
+
+            id="ar-camera"
+
+            position="0 0 0"
+
+            look-controls="enabled: false">
+
+        </a-camera>
+
+
+        <!-- =================================================
+             TARGET
+        ================================================== -->
+
+        <a-entity
+
+            id="furadeiraTarget"
+
+            mindar-image-target="targetIndex: 0">
+
+
+            <!-- =================================================
+                 HOTSPOT
+            ================================================== -->
+
+            <a-sphere
+
+                class="hotspot"
+
+                data-topic="motor"
+
+                position="0 0 0"
+
+                radius="0.08"
+
+                material="
+                    color: red;
+                    opacity: 1;
+                ">
+
+            </a-sphere>
+
+
+        </a-entity>
+
+
+    </a-scene>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+
+                console.log(
+                    "================================"
+                );
+
+                console.log(
+                    "TESTE 4 INICIADO"
+                );
+
+                console.log(
+                    "================================"
+                );
+
+
+                const scene =
+                    document.querySelector(
+                        "#ar-scene"
+                    );
+
+
+                const cameraElement =
+                    document.querySelector(
+                        "#ar-camera"
+                    );
+
+
+                /* =================================================
+                   VERIFICA SCENE
+                ================================================== */
+
+                console.log(
+                    "SCENE:",
+                    scene
+                );
+
+
+                if (!scene) {
+
+                    console.error(
+                        "ERRO: A-Frame scene não encontrada."
+                    );
+
+                    return;
+
+                }
+
+
+                /* =================================================
+                   ESPERA O RENDERER DO A-FRAME
+                ================================================== */
+
+                scene.addEventListener(
+                    "renderstart",
+                    () => {
+
+
+                        console.log(
+                            "================================"
+                        );
+
+                        console.log(
+                            "RENDERSTART RECEBIDO"
+                        );
+
+                        console.log(
+                            "================================"
+                        );
+
+
+                        /* =========================================
+                           CÂMERA DO A-FRAME
+                        ========================================== */
+
+                        console.log(
+                            "CAMERA ELEMENT:",
+                            cameraElement
+                        );
+
+
+                        console.log(
+                            "SCENE.CAMERA:",
+                            scene.camera
+                        );
+
+
+                        if (scene.camera) {
+
+                            console.log(
+                                "SUCESSO: câmera Three.js encontrada."
+                            );
+
+                        } else {
+
+                            console.error(
+                                "ERRO: câmera Three.js NÃO encontrada."
+                            );
+
+                        }
+
+
+                        /* =========================================
+                           RENDERER
+                        ========================================== */
+
+                        console.log(
+                            "SCENE.RENDERER:",
+                            scene.renderer
+                        );
+
+
+                        if (scene.renderer) {
+
+                            console.log(
+                                "SUCESSO: renderer encontrado."
+                            );
+
+                        } else {
+
+                            console.error(
+                                "ERRO: renderer NÃO encontrado."
+                            );
+
+                        }
+
+
+                        /* =========================================
+                           CANVAS
+                        ========================================== */
+
+                        if (
+                            scene.renderer &&
+                            scene.renderer.domElement
+                        ) {
+
+                            console.log(
+                                "SUCESSO: canvas encontrado."
+                            );
+
+
+                            console.log(
+                                "CANVAS:",
+                                scene.renderer.domElement
+                            );
+
+                        } else {
+
+                            console.error(
+                                "ERRO: canvas NÃO encontrado."
+                            );
+
+                        }
+
+
+                        console.log(
+                            "================================"
+                        );
+
+                        console.log(
+                            "TESTE 4 FINALIZADO"
+                        );
+
+                        console.log(
+                            "================================"
+                        );
+
+
+                    }
+                );
+
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>
