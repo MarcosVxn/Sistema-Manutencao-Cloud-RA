@@ -612,44 +612,31 @@
                 }
 
 
+                
                 /* ======================================
-                   INTERAÇÃO DOS PONTOS
-
-                   Não adicionamos:
-                   - cursor
-                   - raycaster
-                   - THREE.Vector3
-                   - projeção
-                   - posicionamento HTML
-
-                   A cena AR permanece intacta.
+                INTERAÇÃO DOS PONTOS AR
                 ======================================= */
 
-                hotspots.forEach(
-                    (hotspot) => {
+                hotspots.forEach((hotspot) => {
 
+                    // Torna o ponto selecionável
+                    hotspot.classList.add("clickable");
 
-                        hotspot.addEventListener(
-                            "click",
-                            () => {
+                    // Detecta o clique ou toque reconhecido pelo A-Frame
+                    hotspot.addEventListener("click", (event) => {
 
+                        event.stopPropagation();
 
-                                const topic =
-                                    hotspot.getAttribute(
-                                        "data-topic"
-                                    );
+                        const topic = hotspot.getAttribute("data-topic");
 
+                        console.log("Ponto selecionado:", topic);
 
-                                mostrarInformacao(
-                                    topic
-                                );
+                        mostrarInformacao(topic);
 
-                            }
-                        );
+                    });
 
+                });
 
-                    }
-                );
 
 
                 /* ======================================
