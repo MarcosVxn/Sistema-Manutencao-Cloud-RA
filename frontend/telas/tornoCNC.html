@@ -1,239 +1,196 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Torno CNC - Realidade Aumentada</title>
-
-    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-    <!-- MindAR -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-
     <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            overflow: hidden;
-
-            font-family: Arial, sans-serif;
-        }
-
-        /*
-        Painel HTML que aparece quando
-        a imagem é reconhecida
-        */
-
+        * { box-sizing: border-box; }
+        body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
         #painelFuradeira {
-
-            position: fixed;
-
-            left: 50%;
-            bottom: 20px;
-
-            transform: translateX(-50%);
-
-            width: min(90%, 400px);
-
-            padding: 20px;
-
-            background: rgba(15, 25, 35, 0.95);
-
-            color: white;
-
-            border: 2px solid #f5b400;
-
-            border-radius: 12px;
-
-            box-shadow:
-                0 10px 30px rgba(0, 0, 0, 0.5);
-
-            z-index: 100;
-
-            display: none;
+            position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+            width: min(90%, 420px); padding: 20px;
+            background: linear-gradient(145deg, rgba(15, 27, 43, .97), rgba(7, 14, 25, .97));
+            color: white; border: 1px solid rgba(255,196,82,.9); border-radius: 20px;
+            box-shadow: 0 16px 45px rgba(0,0,0,.48), 0 0 0 1px rgba(255,255,255,.08) inset;
+            backdrop-filter: blur(12px); z-index: 100; display: none;
+            max-height: min(68vh, 520px); overflow-y: auto;
         }
-
-        #painelFuradeira h2 {
-
-            margin-top: 0;
-
-            color: #f5b400;
-        }
-
-        #painelFuradeira p {
-
-            line-height: 1.5;
-        }
-
+        #painelFuradeira h2 { margin: 12px 0 14px; color: #ffd071; font-size: 23px; }
+        #painelFuradeira p { color: #e4ebf5; font-size: 14px; line-height: 1.55; }
         .status {
-
-            display: inline-block;
-
-            padding: 6px 12px;
-
-            background: #16803c;
-
-            border-radius: 20px;
-
-            font-size: 13px;
-
-            margin-bottom: 10px;
+            display: inline-block; padding: 7px 11px; border-radius: 20px;
+            background: rgba(255,190,70,.14); border: 1px solid rgba(255,190,70,.45);
+            color: #ffd071; font-size: 11px; font-weight: 700; letter-spacing: .7px;
         }
-
         .botao {
-
-            width: 100%;
-
-            padding: 12px;
-
-            margin-top: 10px;
-
-            border: none;
-
-            border-radius: 6px;
-
-            background: #f5b400;
-
-            color: #111;
-
-            font-weight: bold;
-
-            cursor: pointer;
+            width: 100%; padding: 13px; margin-top: 10px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #ffd071, #f0a928); color: #172033;
+            font-weight: bold; cursor: pointer; box-shadow: 0 6px 18px rgba(240,169,40,.22);
         }
-
-        .botao:hover {
-
-            background: #ffc72c;
-        }
-
+        .botao:active { transform: scale(.98); }
+        .hotspot-marker { filter: drop-shadow(0 0 7px rgba(255,190,70,.9)); }
     </style>
-
 </head>
-
 <body>
-
-
-    <!-- =====================================
-         CENA DE REALIDADE AUMENTADA
-    ====================================== -->
-
     <a-scene
-        mindar-image="
-            imageTargetSrc: ../assets/targets/TornoCNCTargets.mind;
-            uiLoading: yes;
-            uiScanning: yes;
-            uiError: yes;
-        "
-        vr-mode-ui="enabled: false"
-        device-orientation-permission-ui="enabled: false"
+        mindar-image="imageTargetSrc: ../assets/targets/TornoCNCTargets.mind; uiLoading: yes; uiScanning: yes; uiError: yes;"
+        vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false"
         renderer="colorManagement: true">
-
-        <a-camera
-            position="0 0 0"
-            look-controls="enabled: false">
-        </a-camera>
-
-        <a-entity
-            id="furadeiraTarget"
-            mindar-image-target="targetIndex: 0">
-
-            <a-box
-                position="0 0 0"
-                material="color: red;">
-            </a-box>
-
+        <a-camera position="0 0 0" look-controls="enabled: false"
+            cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .hotspot; far: 20"></a-camera>
+        <a-entity id="furadeiraTarget" mindar-image-target="targetIndex: 0">
+            <!-- Posições aproximadas sobre a imagem-alvo do torno CNC (plano XY). -->
+            <a-sphere class="hotspot" data-topic="painel" position="-0.346 0.023 0.1" radius="0.033"
+                material="color: #ffc45c; emissive: #ffad32; emissiveIntensity: 0.85; metalness: 0.25; roughness: 0.22">
+                <a-torus class="hotspot-marker" radius="0.055" radius-tubular="0.006" segments-radial="8" segments-tubular="48"
+                    material="color: #fff2d6; emissive: #ffbf55; emissiveIntensity: 0.65; metalness: 0.1; roughness: 0.25"
+                    animation__pulse="property: scale; to: 1.22 1.22 1.22; dir: alternate; dur: 900; loop: true; easing: easeInOutSine"></a-torus>
+            </a-sphere>
+            <a-sphere class="hotspot" data-topic="cabecote" position="-0.296 -0.187 0.1" radius="0.033"
+                material="color: #ffc45c; emissive: #ffad32; emissiveIntensity: 0.85; metalness: 0.25; roughness: 0.22">
+                <a-torus class="hotspot-marker" radius="0.055" radius-tubular="0.006" segments-radial="8" segments-tubular="48"
+                    material="color: #fff2d6; emissive: #ffbf55; emissiveIntensity: 0.65; metalness: 0.1; roughness: 0.25"
+                    animation__pulse="property: scale; to: 1.22 1.22 1.22; dir: alternate; dur: 900; loop: true; easing: easeInOutSine"></a-torus>
+            </a-sphere>
+            <a-sphere class="hotspot" data-topic="torre" position="-0.073 -0.151 0.1" radius="0.033"
+                material="color: #ffc45c; emissive: #ffad32; emissiveIntensity: 0.85; metalness: 0.25; roughness: 0.22">
+                <a-torus class="hotspot-marker" radius="0.055" radius-tubular="0.006" segments-radial="8" segments-tubular="48"
+                    material="color: #fff2d6; emissive: #ffbf55; emissiveIntensity: 0.65; metalness: 0.1; roughness: 0.25"
+                    animation__pulse="property: scale; to: 1.22 1.22 1.22; dir: alternate; dur: 900; loop: true; easing: easeInOutSine"></a-torus>
+            </a-sphere>
+            <a-sphere class="hotspot" data-topic="protecao" position="0.190 -0.013 0.1" radius="0.033"
+                material="color: #ffc45c; emissive: #ffad32; emissiveIntensity: 0.85; metalness: 0.25; roughness: 0.22">
+                <a-torus class="hotspot-marker" radius="0.055" radius-tubular="0.006" segments-radial="8" segments-tubular="48"
+                    material="color: #fff2d6; emissive: #ffbf55; emissiveIntensity: 0.65; metalness: 0.1; roughness: 0.25"
+                    animation__pulse="property: scale; to: 1.22 1.22 1.22; dir: alternate; dur: 900; loop: true; easing: easeInOutSine"></a-torus>
+            </a-sphere>
         </a-entity>
-
     </a-scene>
 
-    <!-- =====================================
-         INTERFACE HTML
-    ====================================== -->
-
     <div id="painelFuradeira">
-
-        <span class="status">
-            ● EQUIPAMENTO RECONHECIDO
-        </span>
-
-        <h2>Furadeira Industrial</h2>
-
-        <p>
-            <strong>Modelo:</strong>
-            FUR-2026
-        </p>
-
-        <p>
-            <strong>Status:</strong>
-            Operacional
-        </p>
-
-        <p>
-            <strong>Última manutenção:</strong>
-            15/09/2026
-        </p>
-
-
-        <button
-            class="botao"
-            onclick="mostrarManutencao()">
-
-            Procedimentos de manutenção
-
-        </button>
-
-
-        <button
-            class="botao"
-            onclick="fecharPainel()">
-
-            Fechar
-
-        </button>
-
+        <span class="status">● COMPONENTE DO TORNO CNC</span>
+        <h2 id="tituloPeca">Componente</h2>
+        <p><strong>Descrição:</strong></p><p id="descricaoPeca">-</p>
+        <p><strong>Detalhes:</strong></p><p id="detalhesPeca">-</p>
+        <button id="botaoFechar" class="botao">Fechar</button>
     </div>
 
-
-    <!-- =====================================
-         JAVASCRIPT
-    ====================================== -->
-
     <script>
-
-        const scene = document.querySelector("a-scene");
-
-        scene.addEventListener("loaded", () => {
-            console.log("A-Frame carregado");
-        });
-
-        scene.addEventListener("renderstart", () => {
-            console.log("Renderização iniciada");
-        });
-
+    document.addEventListener("DOMContentLoaded", () => {
         const target = document.querySelector("#furadeiraTarget");
+        const painel = document.querySelector("#painelFuradeira");
+        const titulo = document.querySelector("#tituloPeca");
+        const descricao = document.querySelector("#descricaoPeca");
+        const detalhes = document.querySelector("#detalhesPeca");
+        const botaoFechar = document.querySelector("#botaoFechar");
+        const hotspots = document.querySelectorAll(".hotspot");
 
-        target.addEventListener("targetFound", () => {
-            console.log("================================");
-            console.log("FURADEIRA ENCONTRADA!");
-            console.log("================================");
+        // Componentes cadastrados no backendCNC/appCN.py.
+        const information = {
+            cabecote: {
+                title: "Cabeçote principal / Placa de fixação",
+                text: "Conjunto responsável por sustentar e girar a peça durante a usinagem.",
+                detail: "Verifique a fixação da peça, o estado das castanhas e sinais de vibração ou ruído anormal. Faça qualquer inspeção com a máquina parada."
+            },
+            torre: {
+                title: "Torre porta-ferramentas",
+                text: "Conjunto indexável que posiciona a ferramenta de corte utilizada em cada etapa da usinagem.",
+                detail: "Observe o travamento da torre, o desgaste dos suportes e a integridade das ferramentas. Não toque na região durante o ciclo automático."
+            },
+            painel: {
+                title: "Painel de comando CNC",
+                text: "Interface de operação usada para programar, configurar e acompanhar os ciclos do torno CNC.",
+                detail: "Mantenha o painel limpo e seco. Verifique alarmes e comandos antes de iniciar o ciclo; intervenções elétricas devem ser feitas por profissional autorizado."
+            },
+            protecao: {
+                title: "Carenagem e porta de proteção",
+                text: "Barreira física que isola a área de usinagem e ajuda a conter cavacos e fluido de corte.",
+                detail: "Confira portas, visor, travas e intertravamentos. Não opere o equipamento com proteções abertas, danificadas ou burladas."
+            }
+        };
+
+        function mostrarInformacao(topic) {
+            const info = information[topic];
+            if (!info) return;
+            titulo.textContent = info.title;
+            descricao.textContent = info.text;
+            detalhes.textContent = info.detail;
+            painel.style.display = "block";
+        }
+        function fecharPainel() { painel.style.display = "none"; }
+
+        // Captura global do toque, necessária no Chrome Android com MindAR.
+        const scene = document.querySelector("a-scene");
+        const raycaster = new THREE.Raycaster();
+        const ponteiro = new THREE.Vector2();
+        let interacaoInstalada = false;
+        let ultimoToqueProcessado = 0;
+        hotspots.forEach((hotspot) => {
+            hotspot.classList.add("clickable");
+            hotspot.setAttribute("visible", "true");
         });
+        function selecionarHotspot(clientX, clientY) {
+            if (!scene || !scene.canvas || !scene.camera) return false;
+            const rect = scene.canvas.getBoundingClientRect();
+            if (!rect.width || !rect.height) return false;
+            ponteiro.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+            ponteiro.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+            scene.camera.updateMatrixWorld(true);
+            scene.object3D.updateMatrixWorld(true);
+            const objetos = Array.from(hotspots)
+                .filter((h) => h.object3D && h.object3D.visible)
+                .map((h) => h.object3D);
+            raycaster.setFromCamera(ponteiro, scene.camera);
+            const intersecoes = raycaster.intersectObjects(objetos, true);
+            if (!intersecoes.length) return false;
+            let objeto = intersecoes[0].object;
+            let selecionado = null;
+            while (objeto && !selecionado) {
+                const elemento = objeto.el;
+                if (elemento && elemento.classList && elemento.classList.contains("hotspot")) selecionado = elemento;
+                objeto = objeto.parent;
+            }
+            if (!selecionado) return false;
+            mostrarInformacao(selecionado.getAttribute("data-topic"));
+            return true;
+        }
+        function tratarPonteiro(event) {
+            if (painel.contains(event.target)) return;
+            if (event.pointerType === "mouse" && event.button !== 0) return;
+            const agora = Date.now();
+            if (agora - ultimoToqueProcessado < 250) return;
+            if (selecionarHotspot(event.clientX, event.clientY)) {
+                ultimoToqueProcessado = agora;
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+        function instalarInteracaoHotspots() {
+            if (interacaoInstalada || !scene.canvas || !scene.camera) return;
+            interacaoInstalada = true;
+            document.addEventListener("pointerup", tratarPonteiro, true);
+            if (!window.PointerEvent) {
+                document.addEventListener("touchend", (event) => {
+                    if (painel.contains(event.target) || !event.changedTouches.length) return;
+                    const toque = event.changedTouches[0];
+                    if (selecionarHotspot(toque.clientX, toque.clientY)) {
+                        event.preventDefault(); event.stopPropagation();
+                    }
+                }, { capture: true, passive: false });
+            }
+            console.log("Interação dos pontos do Torno CNC instalada.");
+        }
+        scene.addEventListener("renderstart", instalarInteracaoHotspots);
+        scene.addEventListener("loaded", instalarInteracaoHotspots);
+        if (scene.hasLoaded && scene.canvas && scene.camera) instalarInteracaoHotspots();
 
-        target.addEventListener("targetLost", () => {
-            console.log("Furadeira perdida");
-        });
-
+        botaoFechar.addEventListener("click", fecharPainel);
+        target.addEventListener("targetFound", () => console.log("Torno CNC encontrado."));
+        target.addEventListener("targetLost", () => { console.log("Torno CNC perdido."); fecharPainel(); });
+    });
     </script>
-
-
 </body>
-
 </html>
