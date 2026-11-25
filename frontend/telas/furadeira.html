@@ -165,7 +165,7 @@
             position="0 0 0"
             look-controls="enabled: false"
             cursor="rayOrigin: mouse; fuse: false"
-            raycaster="objects: .hotspot; far: 10">
+            raycaster="objects: .hotspot; far: 20">
         </a-camera>
 
 
@@ -613,38 +613,111 @@
 
                 
                 /* ======================================
-                INTERAÇÃO DOS PONTOS AR
+                   INTERAÇÃO DOS PONTOS AR (ANDROID/CHROME)
+                   O listener fica no document em fase capture,
+                   pois no celular o toque pode atingir a camada
+                   do vídeo da câmera em vez do canvas do A-Frame.
                 ======================================= */
 
+                const scene = document.querySelector("a-scene");
+                const raycaster = new THREE.Raycaster();
+                const ponteiro = new THREE.Vector2();
+                let interacaoInstalada = false;
+                let ultimoToqueProcessado = 0;
+
                 hotspots.forEach((hotspot) => {
-
-                    // Torna o ponto selecionável
                     hotspot.classList.add("clickable");
-
-                    // Destaca o ponto quando o cursor passa sobre ele
-                    hotspot.addEventListener("mouseenter", () => {
-                        hotspot.setAttribute("scale", "1.25 1.25 1.25");
-                    });
-
-                    hotspot.addEventListener("mouseleave", () => {
-                        hotspot.setAttribute("scale", "1 1 1");
-                    });
-
-                    // Detecta o clique reconhecido pelo cursor/raycaster do A-Frame
-                    hotspot.addEventListener("click", (event) => {
-
-                        event.stopPropagation();
-
-                        const topic = hotspot.getAttribute("data-topic");
-
-                        console.log("Ponto selecionado:", topic);
-
-                        mostrarInformacao(topic);
-
-                    });
-
+                    hotspot.setAttribute("visible", "true");
                 });
 
+                function selecionarHotspot(clientX, clientY) {
+                    if (!scene || !scene.canvas || !scene.camera) return false;
+
+                    const canvas = scene.canvas;
+                    const rect = canvas.getBoundingClientRect();
+                    if (!rect.width || !rect.height) return false;
+
+                    // Converte a posição do toque para coordenadas normalizadas (-1 a 1).
+                    ponteiro.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+                    ponteiro.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+                    // Atualiza as matrizes antes de calcular a interseção.
+                    scene.camera.updateMatrixWorld(true);
+                    scene.object3D.updateMatrixWorld(true);
+
+                    const objetos = Array.from(hotspots)
+                        .filter((hotspot) => {
+                            return hotspot.object3D &&
+                                hotspot.object3D.visible &&
+                                hotspot.getAttribute("visible") !== false;
+                        })
+                        .map((hotspot) => hotspot.object3D);
+
+                    raycaster.setFromCamera(ponteiro, scene.camera);
+                    const intersecoes = raycaster.intersectObjects(objetos, true);
+                    if (!intersecoes.length) return false;
+
+                    // Sobe na hierarquia Three.js até encontrar o elemento A-Frame.
+                    let objeto = intersecoes[0].object;
+                    let hotspotSelecionado = null;
+                    while (objeto && !hotspotSelecionado) {
+                        const elemento = objeto.el;
+                        if (elemento && elemento.classList && elemento.classList.contains("hotspot")) {
+                            hotspotSelecionado = elemento;
+                        }
+                        objeto = objeto.parent;
+                    }
+
+                    if (!hotspotSelecionado) return false;
+
+                    const topic = hotspotSelecionado.getAttribute("data-topic");
+                    console.log("Hotspot selecionado:", topic);
+                    mostrarInformacao(topic);
+                    return true;
+                }
+
+                function tratarPonteiro(event) {
+                    // Não tenta selecionar objetos quando o toque é dentro da ficha.
+                    if (painel.contains(event.target)) return;
+                    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+                    const agora = Date.now();
+                    if (agora - ultimoToqueProcessado < 250) return;
+
+                    if (selecionarHotspot(event.clientX, event.clientY)) {
+                        ultimoToqueProcessado = agora;
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                }
+
+                function instalarInteracaoHotspots() {
+                    if (interacaoInstalada || !scene.canvas || !scene.camera) return;
+                    interacaoInstalada = true;
+
+                    // Captura antes dos elementos internos (inclusive o vídeo/canvas).
+                    document.addEventListener("pointerup", tratarPonteiro, true);
+
+                    // Compatibilidade adicional para navegadores sem Pointer Events.
+                    if (!window.PointerEvent) {
+                        document.addEventListener("touchend", (event) => {
+                            if (painel.contains(event.target) || !event.changedTouches.length) return;
+                            const toque = event.changedTouches[0];
+                            if (selecionarHotspot(toque.clientX, toque.clientY)) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
+                        }, { capture: true, passive: false });
+                    }
+
+                    console.log("Interação de toque dos hotspots instalada no document.");
+                }
+
+                scene.addEventListener("renderstart", instalarInteracaoHotspots);
+                scene.addEventListener("loaded", instalarInteracaoHotspots);
+                if (scene.hasLoaded && scene.canvas && scene.camera) {
+                    instalarInteracaoHotspots();
+                }
 
 
                 /* ======================================
